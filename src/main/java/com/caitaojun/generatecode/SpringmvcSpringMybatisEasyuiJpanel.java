@@ -195,31 +195,31 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		JLabel lblModel = new JLabel("domain：");
 		
 		txtComnetdomain = new JTextField();
-		txtComnetdomain.setText("com.net023.domain");
+		txtComnetdomain.setText("com.caitaojun.domain");
 		txtComnetdomain.setColumns(10);
 		
 		JLabel lblMapper = new JLabel("mapper：");
 		
 		txtComnetmapper = new JTextField();
-		txtComnetmapper.setText("com/net023/mapper");
+		txtComnetmapper.setText("com/caitaojun/mapper");
 		txtComnetmapper.setColumns(10);
 		
 		JLabel lblDao = new JLabel("dao：");
 		
 		txtComnetdao = new JTextField();
-		txtComnetdao.setText("com.net023.mapper");
+		txtComnetdao.setText("com.caitaojun.mapper");
 		txtComnetdao.setColumns(10);
 		
 		JLabel lblService = new JLabel("service：");
 		
 		txtComnetservice = new JTextField();
-		txtComnetservice.setText("com.net023.service");
+		txtComnetservice.setText("com.caitaojun.service");
 		txtComnetservice.setColumns(10);
 		
 		JLabel lblController = new JLabel("controller：");
 		
 		txtComnetwebcontroller = new JTextField();
-		txtComnetwebcontroller.setText("com.net023.web.controller");
+		txtComnetwebcontroller.setText("com.caitaojun.web.controller");
 		txtComnetwebcontroller.setColumns(10);
 		
 		JLabel lblHtml = new JLabel("html：");

@@ -457,19 +457,19 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 		JLabel lblDomain = new JLabel("domain：");
 		
 		txtComnetdomain = new JTextField();
-		txtComnetdomain.setText("com.net023.domain");
+		txtComnetdomain.setText("com.caitaojun.domain");
 		txtComnetdomain.setColumns(10);
 		
 		JLabel lblController = new JLabel("controller：");
 		
 		txtComnetwebcontroller = new JTextField();
-		txtComnetwebcontroller.setText("com.net023.web.controller");
+		txtComnetwebcontroller.setText("com.caitaojun.web.controller");
 		txtComnetwebcontroller.setColumns(10);
 		
 		JLabel lblService = new JLabel("service：");
 		
 		txtComnetservice = new JTextField();
-		txtComnetservice.setText("com.net023.service");
+		txtComnetservice.setText("com.caitaojun.service");
 		txtComnetservice.setColumns(10);
 		
 		JLabel lblHtml = new JLabel("html：");
@@ -537,7 +537,7 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 		JLabel lblDao = new JLabel("dao：");
 		
 		txtComnetdao = new JTextField();
-		txtComnetdao.setText("com.net023.dao");
+		txtComnetdao.setText("com.caitaojun.dao");
 		txtComnetdao.setColumns(10);
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
