@@ -522,8 +522,15 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				domainPackageStr = domainPackageStr.replace(".", "/");
 //				System.out.println(domainPackageStr);
 //				System.out.println(System.getProperty("user.dir"));
-				URL resource = Thread.currentThread().getContextClassLoader().getResource(domainPackageStr);
-				File fileDir = new File(resource.getPath());
+//				URL resource = Thread.currentThread().getContextClassLoader().getResource(domainPackageStr);
+//				File fileDir = new File(resource.getPath());
+				
+				String userDir = System.getProperty("user.dir");
+				File fileDir = new File(userDir+"/target/classes/"+domainPackageStr);
+				if(!fileDir.exists()){
+					return;
+				}
+				
 				classes = new ArrayList<>();
 				findClass(fileDir, classes);
 				for (Class clazz: classes) {
