@@ -528,6 +528,7 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				String userDir = System.getProperty("user.dir");
 				File fileDir = new File(userDir+"/target/classes/"+domainPackageStr);
 				if(!fileDir.exists()){
+					domainShowPanel.updateUI();//更新界面
 					return;
 				}
 				
