@@ -38,7 +38,7 @@ public class ${doaminClassName}ServiceImpl implements ${doaminClassName}Service 
 	@Override
 	public void batchDelete(String[] ids){
 		for(String id : ids){
-			${doaminClassName?uncap_first}Repository.delete(id);
+			${doaminClassName?uncap_first}Repository.delete(${primaryKeyJavaType}.valueOf(id));
 		}
 	}
 

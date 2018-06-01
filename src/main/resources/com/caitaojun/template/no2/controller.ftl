@@ -61,7 +61,7 @@ public class ${doaminClassName}Controller {
 	//批量删除
 	@RequestMapping("/batchDelete")
 	@ResponseBody
-	public Object delete(String ids) {
+	public Object batchDelete(String ids) {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			${doaminClassName?uncap_first}Service.batchDelete(ids.split(","));

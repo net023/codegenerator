@@ -92,7 +92,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	
 	//批量删除
 	@Action(value = "batchDelete", results = {@Result(name = "success", type = "json")})
-	public String delete() {
+	public String batchDelete() {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			${doaminClassName?uncap_first}Service.batchDelete(ids.split(","));
@@ -112,10 +112,10 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String findOne() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName} ${doaminClassName?uncap_first} = ${doaminClassName?uncap_first}Service.findOne(${doaminClassName?uncap_first});
+			${doaminClassName} data = ${doaminClassName?uncap_first}Service.findOne(${doaminClassName?uncap_first});
 			result.put("message", "获取成功!");
 			result.put("success", true);
-			result.put("data", ${doaminClassName?uncap_first});
+			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("message", "获取成功!");

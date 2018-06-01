@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1399,11 +1400,20 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				}
 			}
 			
+			private List<String> types = Arrays.asList(
+					"int","byte","short","long","float","double","boolean","char",
+					"java.lang.Integer","java.lang.Byte","java.lang.Short","java.lang.Long","java.lang.Float","java.lang.Double","java.lang.Boolean","java.lang.Character",
+					"java.lang.String"
+					);
+			
 			private List<String> getClassAllFieldNames(Class clazz) {
 				Field[] declaredFields = clazz.getDeclaredFields();
 				List<String> fieldNames = new ArrayList<>();
 				for (Field field : declaredFields) {
-					fieldNames.add(field.getName());
+					//判断属性字段不是集合类型  不是自定义引用类型
+					if(types.contains(field.getType().getCanonicalName())){
+						fieldNames.add(field.getName());
+					}
 				}
 				return fieldNames;
 			}
