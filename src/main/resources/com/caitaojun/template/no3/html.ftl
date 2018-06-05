@@ -4,12 +4,12 @@
 		<meta charset="UTF-8">
 		<title>${doaminClassName}</title>
 		<!-- 导入jquery核心类库 -->
-		<script type="text/javascript" src="../../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="${resPathPrefix}js/jquery-1.8.3.js"></script>
 		<!-- 导入easyui类库 -->
-		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="../../js/easyui/themes/icon.css">
-		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
-		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="${resPathPrefix}js/easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="${resPathPrefix}js/easyui/themes/icon.css">
+		<script type="text/javascript" src="${resPathPrefix}js/easyui/jquery.easyui.min.js"></script>
+		<script src="${resPathPrefix}js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<style type="text/css">
 			.opt{
 				text-decoration: none;
@@ -25,7 +25,7 @@
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : "#tb",
-					url:"../${doaminClassName?uncap_first}/pageQuery.action",
+					url:"${resPathPrefix}${doaminClassName?uncap_first}/pageQuery.action",
 					idField : 'id',
 					columns : [ [
 					<#list fieldNames as field>
@@ -102,7 +102,7 @@
 			});
 			
 			function edit(rowIndex){
-				$('#${doaminClassName?uncap_first}Form').attr('action','../${doaminClassName?uncap_first}/update');
+				$('#${doaminClassName?uncap_first}Form').attr('action','${resPathPrefix}${doaminClassName?uncap_first}/update');
 			    var data = $('#${doaminClassName?uncap_first}Grid').datagrid('getRows')[rowIndex];
 			    $('#${doaminClassName?uncap_first}Form').form("load",data);
 			    $('#${doaminClassName?uncap_first}EditDialog').dialog('open').dialog('setTitle','修改');
@@ -112,7 +112,7 @@
 				$.messager.confirm('操作提示', '确定要删除？', function(r){
 			        if (r){
 			            var data = $('#${doaminClassName?uncap_first}Grid').datagrid('getRows')[rowIndex];
-			            $.post("../${doaminClassName?uncap_first}/delete",{'id':data.id},function(data){
+			            $.post("${resPathPrefix}${doaminClassName?uncap_first}/delete",{'id':data.id},function(data){
 			            	if(data.success){
 			            		$('#${doaminClassName?uncap_first}Grid').datagrid('reload');
 			            	}else{
@@ -132,7 +132,7 @@
 		                    for(var i in check){
 		                    	configs[i] = check[i].id;
 		                    }
-		                    $.post("../${doaminClassName?uncap_first}/batchDelete",{'ids':configs.join(',')},function(data){
+		                    $.post("${resPathPrefix}${doaminClassName?uncap_first}/batchDelete",{'ids':configs.join(',')},function(data){
 				            	if(data.success){
 				            		$('#${doaminClassName?uncap_first}Grid').datagrid('reload');
 				            	}else{
@@ -145,7 +145,7 @@
 			}
 			
 			function add(){
-				$('#${doaminClassName?uncap_first}Form').attr('action','../${doaminClassName?uncap_first}/save');
+				$('#${doaminClassName?uncap_first}Form').attr('action','${resPathPrefix}${doaminClassName?uncap_first}/save');
 		        $('#${doaminClassName?uncap_first}EditDialog').dialog('open').dialog("setTitle","添加");
 			}
 			

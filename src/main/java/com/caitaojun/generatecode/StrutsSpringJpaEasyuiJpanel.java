@@ -30,6 +30,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
+import com.caitaojun.utils.JarFileResUtil;
 import com.caitaojun.utils.StringUtil;
 
 import freemarker.template.Configuration;
@@ -219,6 +220,10 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 			}
 
 			private void generateHtml(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
+				String projectPath = System.getProperty("user.dir");
+				//复制资源com/caitaojun/js到webapp目录下
+				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
 				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no1").getPath();
@@ -232,6 +237,12 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 				dataModel.put("doaminPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
+				String[] htmlPathSeparator = htmlPathStr.split("/");
+				String resPathPrefix = "";
+				for (int i = 0; i < htmlPathSeparator.length-1; i++) {
+					resPathPrefix = resPathPrefix+"../";
+				}
+				dataModel.put("resPathPrefix", resPathPrefix);
 				for (Class clazz : selectedDomainClass) {
 					dataModel.put("doaminClassName", clazz.getSimpleName());
 					//获取所有的字段
@@ -241,7 +252,6 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);
 					//D:\ProgramFiles\workspace\czbk\generatecode
-					String projectPath = System.getProperty("user.dir");
 					String htmlPath = htmlPathStr.replace("/", "\\");
 					String htmlFilePath = projectPath+"\\src\\main"+"\\"+htmlPath;
 					File file = new File(htmlFilePath);

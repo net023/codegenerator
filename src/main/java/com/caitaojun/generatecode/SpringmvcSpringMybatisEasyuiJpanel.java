@@ -41,6 +41,7 @@ import javax.swing.border.LineBorder;
 
 import org.mybatis.generator.api.IntrospectedTable;
 
+import com.caitaojun.utils.JarFileResUtil;
 import com.caitaojun.utils.JdbcUtil;
 import com.caitaojun.utils.MybatisGenerate;
 import com.caitaojun.utils.StringUtil;
@@ -1353,6 +1354,10 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 
 			private void generateHtml(boolean iscover, GenerateInfo generateInfo,
 					Map<String, Map<String, Object>> data_new, List<String> selectedTableNames) throws ClassNotFoundException, TemplateException, IOException {
+				String projectPath = System.getProperty("user.dir");
+				//复制资源com/caitaojun/js到webapp目录下
+				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
 				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no3").getPath();
@@ -1366,6 +1371,12 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				dataModel.put("doaminPackage", generateInfo.getDomainPackageStr());
 				dataModel.put("servicePackage", generateInfo.getServicePackageStr());
 				dataModel.put("daoPackage", generateInfo.getDaoPackageStr());
+				String[] htmlPathSeparator = generateInfo.getHtmlPathStr().split("/");
+				String resPathPrefix = "";
+				for (String separator : htmlPathSeparator) {
+					resPathPrefix = resPathPrefix+"../";
+				}
+				dataModel.put("resPathPrefix", resPathPrefix);
 				for (String tableName : selectedTableNames) {
 					Map<String, Object> tableInfo = data_new.get(tableName);
 					Object generateClassName = tableInfo.get("generateClassName");
@@ -1377,7 +1388,6 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					Class<?> clazz = Class.forName(domainClassStr);
 					List<String>  allFieldNames = getClassAllFieldNames(clazz);
 					dataModel.put("fieldNames", allFieldNames);
-					String projectPath = System.getProperty("user.dir");
 					String htmlPath = generateInfo.getHtmlPathStr().replace("/", "\\");
 					String htmlFilePath = projectPath+"\\src\\main"+"\\"+htmlPath;
 					File file = new File(htmlFilePath);
