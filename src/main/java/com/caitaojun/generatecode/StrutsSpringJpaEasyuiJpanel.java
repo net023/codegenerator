@@ -32,6 +32,7 @@ import javax.swing.border.LineBorder;
 
 import com.caitaojun.utils.JarFileResUtil;
 import com.caitaojun.utils.StringUtil;
+import com.caitaojun.utils.ThreadLocalAllDomainJavaProperties;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -222,7 +223,15 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 			private void generateHtml(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
 				String projectPath = System.getProperty("user.dir");
 				//复制资源com/caitaojun/js到webapp目录下
-				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+//				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+				String webappPath = null;
+				if(htmlPathStr.startsWith("src/main/webapp")){
+					//sts(eclipse)
+					webappPath = projectPath+"\\src\\main\\webapp\\js";
+				}else if(htmlPathStr.startsWith("web")){
+					//ideal
+					webappPath = projectPath+"\\web\\js";
+				}
 				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
 				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -237,10 +246,19 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 				dataModel.put("doaminPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
+				//htmlPathStr  sts(eclipse):src/main/webapp   idealj:web
 				String[] htmlPathSeparator = htmlPathStr.split("/");
 				String resPathPrefix = "";
-				for (int i = 0; i < htmlPathSeparator.length-1; i++) {
-					resPathPrefix = resPathPrefix+"../";
+				if(htmlPathStr.startsWith("src/main/webapp")){
+					//sts(eclipse)
+					for (int i = 0; i < htmlPathSeparator.length-3; i++) {
+						resPathPrefix = resPathPrefix+"../";
+					}
+				}else if(htmlPathStr.startsWith("web")){
+					//idealj
+					for (int i = 0; i < htmlPathSeparator.length-1; i++) {
+						resPathPrefix = resPathPrefix+"../";
+					}
 				}
 				dataModel.put("resPathPrefix", resPathPrefix);
 				for (Class clazz : selectedDomainClass) {
@@ -253,7 +271,7 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 //					System.out.println(canonicalPath);
 					//D:\ProgramFiles\workspace\czbk\generatecode
 					String htmlPath = htmlPathStr.replace("/", "\\");
-					String htmlFilePath = projectPath+"\\src\\main"+"\\"+htmlPath;
+					String htmlFilePath = projectPath+"\\"+htmlPath;
 					File file = new File(htmlFilePath);
 					if(!file.exists()){
 						file.mkdirs();
@@ -494,7 +512,7 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 		JLabel lblHtml = new JLabel("html：");
 		
 		txtWebapppages = new JTextField();
-		txtWebapppages.setText("webapp/pages");
+		txtWebapppages.setText("src/main/webapp/pages");
 		txtWebapppages.setColumns(10);
 		
 		

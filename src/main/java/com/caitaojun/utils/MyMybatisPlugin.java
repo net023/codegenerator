@@ -2,6 +2,7 @@ package com.caitaojun.utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,35 @@ public class MyMybatisPlugin extends PluginAdapter {
 			}
 		}
 		
+//		System.out.println(topLevelClass.getType().getShortName());
+//		System.out.println(introspectedTable.getFullyQualifiedTable().getIntrospectedTableName());
+//		List<org.mybatis.generator.api.dom.java.Field> fields = topLevelClass.getFields();
+//		for (org.mybatis.generator.api.dom.java.Field field : fields) {
+//			System.out.println(field.getName()+"  "+field.getType().getFullyQualifiedName());
+//		}
+//		System.out.println("-----------------");
+//		List<IntrospectedColumn> baseColumns = introspectedTable.getAllColumns();
+//		for (IntrospectedColumn introspectedColumn : baseColumns) {
+//			System.out.println(introspectedColumn.getJavaProperty()+"   "+introspectedColumn.getFullyQualifiedJavaType().getFullyQualifiedName());
+//		}
+		
+		String className = topLevelClass.getType().getShortName();
+//		System.out.println("plugin className:"+className);
+		List<String> javaPropertyes = new ArrayList<String>();
+		List<org.mybatis.generator.api.dom.java.Field> fields = topLevelClass.getFields();
+		List<String> types = Arrays.asList(
+				"int","byte","short","long","float","double","boolean","char",
+				"java.lang.Integer","java.lang.Byte","java.lang.Short","java.lang.Long","java.lang.Float","java.lang.Double","java.lang.Boolean","java.lang.Character",
+				"java.lang.String"
+				);
+		for (org.mybatis.generator.api.dom.java.Field field : fields) {
+			String fullyQualifiedName = field.getType().getFullyQualifiedName();
+			//判断属性字段不是集合类型  不是自定义引用类型
+			if(types.contains(fullyQualifiedName)){
+				javaPropertyes.add(field.getName());
+			}
+		}
+		ThreadLocalAllDomainJavaProperties.setAllDomainJavaProperties(className, javaPropertyes);
 		
 		return super.modelBaseRecordClassGenerated(topLevelClass, introspectedTable);
 	}
@@ -184,6 +214,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		List<Map<String, String>> allFields = (List<Map<String, String>>) tableInfo.get("allFields");
 		if(allFields!=null){
 			for (IntrospectedColumn column : baseColumns) {
+//				System.out.println(column.getJavaProperty()+" 1");
 				for (Map<String, String> map : allFields) {
 					if(column.getJavaProperty().equals(map.get("columnName"))){
 						column.setJavaProperty(map.get("fieldName"));

@@ -45,6 +45,7 @@ import com.caitaojun.utils.JarFileResUtil;
 import com.caitaojun.utils.JdbcUtil;
 import com.caitaojun.utils.MybatisGenerate;
 import com.caitaojun.utils.StringUtil;
+import com.caitaojun.utils.ThreadLocalAllDomainJavaProperties;
 import com.caitaojun.utils.ThreadLocalCurrentIntrospectedTable;
 
 import freemarker.template.Configuration;
@@ -227,7 +228,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		JLabel lblHtml = new JLabel("html：");
 		
 		txtWebapppages = new JTextField();
-		txtWebapppages.setText("webapp/pages");
+		txtWebapppages.setText("src/main/webapp/pages");
 		txtWebapppages.setColumns(10);
 		
 		JButton button_1 = new JButton("确定");
@@ -1310,6 +1311,8 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					}
 					GenerateInfo generateInfo = new GenerateInfo(iscover, isexample, generateDomain, generateMapper, generateService, generateController, generateHtml, domainPackageStr, mapperPathStr, daoPackageStr, servicePackageStr, controllerPackageStr, htmlPathStr, driverStr, urlStr, userNameStr, passwordStr);
 					MybatisGenerate.generateInfo = generateInfo;
+					//对ThreadLocalAllDomainJavaProperties清空
+					ThreadLocalAllDomainJavaProperties.removeAllDomainJavaProperties();
 					//把相关信息传给mybatis generator进行生成
 					MybatisGenerate.generate(data_new, iscover, isexample, generateDomain, generateMapper, generateService, generateController, generateHtml, domainPackageStr, mapperPathStr, daoPackageStr, servicePackageStr, controllerPackageStr, htmlPathStr, driverStr, urlStr, userNameStr, passwordStr);
 					//生成代码
@@ -1329,34 +1332,19 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				}
 			}
 			
-			private Map<String, String> getClassPrimaryKeyTypeName(Class clazz) {
-				Field[] declaredFields = clazz.getDeclaredFields();
-				//javax.persistence.Id
-				Map<String, String> primaryKeyData = new HashMap<>();
-				tag:
-				for (Field property : declaredFields) {
-					property.setAccessible(true);
-					Annotation[] declaredAnnotations = property.getDeclaredAnnotations();
-					for (Annotation annotation : declaredAnnotations) {
-						if(annotation.getClass().getName().equals("javax.persistence.Id")){
-							primaryKeyData.put("name", property.getName());
-							primaryKeyData.put("type", property.getType().getSimpleName());
-							break tag;
-						}
-					}
-				}
-				if(primaryKeyData.get("name")==null){
-					JOptionPane.showConfirmDialog(null, "jpa要求PoJo实体类设置id");
-					throw new RuntimeException("jpa要求PoJo实体类设置id");
-				}
-				return primaryKeyData;
-			}
-
 			private void generateHtml(boolean iscover, GenerateInfo generateInfo,
 					Map<String, Map<String, Object>> data_new, List<String> selectedTableNames) throws ClassNotFoundException, TemplateException, IOException {
 				String projectPath = System.getProperty("user.dir");
 				//复制资源com/caitaojun/js到webapp目录下
-				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+//				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
+				String webappPath = null;
+				if(generateInfo.getHtmlPathStr().startsWith("src/main/webapp")){
+					//sts(eclipse)
+					webappPath = projectPath+"\\src\\main\\webapp\\js";
+				}else if(generateInfo.getHtmlPathStr().startsWith("web")){
+					//ideal
+					webappPath = projectPath+"\\web\\js";
+				}
 				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
 				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
@@ -1373,8 +1361,16 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				dataModel.put("daoPackage", generateInfo.getDaoPackageStr());
 				String[] htmlPathSeparator = generateInfo.getHtmlPathStr().split("/");
 				String resPathPrefix = "";
-				for (String separator : htmlPathSeparator) {
-					resPathPrefix = resPathPrefix+"../";
+				if(generateInfo.getHtmlPathStr().startsWith("src/main/webapp")){
+					//sts(eclipse)
+					for (int i = 0; i < htmlPathSeparator.length-3; i++) {
+						resPathPrefix = resPathPrefix+"../";
+					}
+				}else if(generateInfo.getHtmlPathStr().startsWith("web")){
+					//idealj
+					for (int i = 0; i < htmlPathSeparator.length-1; i++) {
+						resPathPrefix = resPathPrefix+"../";
+					}
 				}
 				dataModel.put("resPathPrefix", resPathPrefix);
 				for (String tableName : selectedTableNames) {
@@ -1384,12 +1380,18 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
 					}
 					dataModel.put("doaminClassName", generateClassName);
-					String domainClassStr = generateInfo.getDomainPackageStr()+"."+generateClassName;
-					Class<?> clazz = Class.forName(domainClassStr);
-					List<String>  allFieldNames = getClassAllFieldNames(clazz);
+//					String domainClassStr = generateInfo.getDomainPackageStr()+"."+generateClassName;
+//					Class<?> clazz = Class.forName(domainClassStr);
+//					List<String>  allFieldNames = getClassAllFieldNames(clazz);
+					
+					Map<String, List<String>> currentIntrospectedTable = ThreadLocalAllDomainJavaProperties.getCurrentIntrospectedTable();
+//					System.out.println("currentIntro:"+currentIntrospectedTable);
+					List<String> allFieldNames = currentIntrospectedTable.get(generateClassName);
+					
 					dataModel.put("fieldNames", allFieldNames);
 					String htmlPath = generateInfo.getHtmlPathStr().replace("/", "\\");
-					String htmlFilePath = projectPath+"\\src\\main"+"\\"+htmlPath;
+//					String htmlFilePath = projectPath+"\\src\\main"+"\\"+htmlPath;
+					String htmlFilePath = projectPath+"\\"+htmlPath;
 					File file = new File(htmlFilePath);
 					if(!file.exists()){
 						file.mkdirs();
