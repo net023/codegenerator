@@ -6,24 +6,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import ${doaminPackage}.${doaminClassName};
+import ${domainClass};
 
-public interface ${doaminClassName}Service {
+public interface ${domainClassName}Service {
 	
-	public ${doaminClassName} save(${doaminClassName} ${doaminClassName?uncap_first});
+	public ${domainClassName} save(${domainClassName} ${domainClassName?uncap_first});
 	
-	public List<${doaminClassName}> save(List<${doaminClassName}> ${doaminClassName?uncap_first}s);
+	public List<${domainClassName}> save(List<${domainClassName}> ${domainClassName?uncap_first}s);
 	
-	public void delete(${doaminClassName} ${doaminClassName?uncap_first});
+	public void delete(${domainClassName} ${domainClassName?uncap_first});
 	
 	public void batchDelete(String[] ids);
 	
-	public ${doaminClassName} findOne(${doaminClassName} ${doaminClassName?uncap_first});
+	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first});
 	
-	public List<${doaminClassName}> findAll();
+	public List<${domainClassName}> findAll();
 	
-	public Page<${doaminClassName}> pageQuery(Pageable pageable);
+	public Page<${domainClassName}> pageQuery(Pageable pageable);
 	
-	public Page<${doaminClassName}> pageQuery(Specification<${doaminClassName}> specification,Pageable pageable);
+	public Page<${domainClassName}> pageQuery(Specification<${domainClassName}> specification,Pageable pageable);
 	
 }

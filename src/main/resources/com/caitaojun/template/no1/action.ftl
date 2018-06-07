@@ -20,15 +20,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
-import ${doaminPackage}.${doaminClassName};
-import ${servicePackage}.${doaminClassName}Service;
+import ${domainClass};
+import ${servicePackage}.${domainClassName}Service;
 
 @ParentPackage("json-default")
-@Namespace("/${doaminClassName?uncap_first}")
+@Namespace("/${domainClassName?uncap_first}")
 @Controller
 @Scope("prototye")
-public class ${doaminClassName}Action extends ActionSupport implements ModelDriven<${doaminClassName}>{
-	private ${doaminClassName} ${doaminClassName?uncap_first} = new ${doaminClassName}();
+public class ${domainClassName}Action extends ActionSupport implements ModelDriven<${domainClassName}>{
+	private ${domainClassName} ${domainClassName?uncap_first} = new ${domainClassName}();
 	
 	private int page;
 	private int rows;
@@ -47,11 +47,11 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	}
 	
 	@Override
-	public ${doaminClassName} getModel() {
-		return ${doaminClassName?uncap_first};
+	public ${domainClassName} getModel() {
+		return ${domainClassName?uncap_first};
 	}
 	@Autowired
-	private ${doaminClassName}Service ${doaminClassName?uncap_first}Service;
+	private ${domainClassName}Service ${domainClassName?uncap_first}Service;
 
 	//增、改
 	@Actions({
@@ -61,7 +61,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String save() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.save(${doaminClassName?uncap_first});
+			${domainClassName?uncap_first}Service.save(${domainClassName?uncap_first});
 			result.put("message", "保存成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -78,7 +78,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String delete() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.delete(${doaminClassName?uncap_first});
+			${domainClassName?uncap_first}Service.delete(${domainClassName?uncap_first});
 			result.put("message", "删除成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String batchDelete() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.batchDelete(ids.split(","));
+			${domainClassName?uncap_first}Service.batchDelete(ids.split(","));
 			result.put("message", "删除成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -112,7 +112,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String findOne() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName} data = ${doaminClassName?uncap_first}Service.findOne(${doaminClassName?uncap_first});
+			${domainClassName} data = ${domainClassName?uncap_first}Service.findOne(${domainClassName?uncap_first});
 			result.put("message", "获取成功!");
 			result.put("success", true);
 			result.put("data", data);
@@ -130,10 +130,10 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 	public String findAll() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<${doaminClassName}> ${doaminClassName?uncap_first}s = ${doaminClassName?uncap_first}Service.findAll();
+			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findAll();
 			result.put("message", "获取成功!");
 			result.put("success", true);
-			result.put("data", ${doaminClassName?uncap_first}s);
+			result.put("data", ${domainClassName?uncap_first}s);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("message", "获取成功!");
@@ -149,7 +149,7 @@ public class ${doaminClassName}Action extends ActionSupport implements ModelDriv
 		Map<String, Object> result = new HashMap<>();
 		try {
 			Pageable pageable = new PageRequest(page-1, rows);
-			Page<${doaminClassName}> pageData = ${doaminClassName?uncap_first}Service.pageQuery(pageable);
+			Page<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.pageQuery(pageable);
 			Map<String, Object> data = new HashMap<>();
 			data.put("total", pageData.getTotalElements());
 			data.put("rows", pageData.getContent());

@@ -1,21 +1,21 @@
 package ${servicePackage};
 
 import java.util.List;
-import ${doaminPackage}.${doaminClassName};
+import ${domainPackage}.${domainClassName};
 
-public interface ${doaminClassName}Service {
+public interface ${domainClassName}Service {
 	
-	public ${doaminClassName} save(${doaminClassName} ${doaminClassName?uncap_first});
+	public ${domainClassName} save(${domainClassName} ${domainClassName?uncap_first});
 	
-	public List<${doaminClassName}> save(List<${doaminClassName}> ${doaminClassName?uncap_first}s);
+	public List<${domainClassName}> save(List<${domainClassName}> ${domainClassName?uncap_first}s);
 	
-	public void delete(${doaminClassName} ${doaminClassName?uncap_first});
+	public void delete(${domainClassName} ${domainClassName?uncap_first});
 	
 	public void batchDelete(String[] ids);
 	
-	public ${doaminClassName} findOne(${doaminClassName} ${doaminClassName?uncap_first});
+	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first});
 	
-	public List<${doaminClassName}> findPageData(${doaminClassName} pojo,Integer pageNumber,Integer pageSize);
+	public List<${domainClassName}> findPageData(${domainClassName} pojo,Integer pageNumber,Integer pageSize);
 
-	public Integer selectCount(${doaminClassName} ${doaminClassName?uncap_first});	
+	public Integer selectCount(${domainClassName} ${domainClassName?uncap_first});	
 }

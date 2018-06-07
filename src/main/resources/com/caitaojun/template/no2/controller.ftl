@@ -13,24 +13,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ${doaminPackage}.${doaminClassName};
-import ${servicePackage}.${doaminClassName}Service;
+import ${domainClass};
+import ${servicePackage}.${domainClassName}Service;
 
 @Controller
 @Scope("prototye")
-@RequestMapping("/${doaminClassName?uncap_first}")
-public class ${doaminClassName}Controller {
+@RequestMapping("/${domainClassName?uncap_first}")
+public class ${domainClassName}Controller {
 	
 	@Autowired
-	private ${doaminClassName}Service ${doaminClassName?uncap_first}Service;
+	private ${domainClassName}Service ${domainClassName?uncap_first}Service;
 
 	//增、改
 	@RequestMapping({"/save","/update"})
 	@ResponseBody
-	public Object save(${doaminClassName} ${doaminClassName?uncap_first}) {
+	public Object save(${domainClassName} ${domainClassName?uncap_first}) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.save(${doaminClassName?uncap_first});
+			${domainClassName?uncap_first}Service.save(${domainClassName?uncap_first});
 			result.put("message", "保存成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -44,10 +44,10 @@ public class ${doaminClassName}Controller {
 	//删
 	@RequestMapping("/delete")
 	@ResponseBody
-	public Object delete(${doaminClassName} ${doaminClassName?uncap_first}) {
+	public Object delete(${domainClassName} ${domainClassName?uncap_first}) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.delete(${doaminClassName?uncap_first});
+			${domainClassName?uncap_first}Service.delete(${domainClassName?uncap_first});
 			result.put("message", "删除成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -64,7 +64,7 @@ public class ${doaminClassName}Controller {
 	public Object batchDelete(String ids) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName?uncap_first}Service.batchDelete(ids.split(","));
+			${domainClassName?uncap_first}Service.batchDelete(ids.split(","));
 			result.put("message", "删除成功!");
 			result.put("success", true);
 		} catch (Exception e) {
@@ -78,10 +78,10 @@ public class ${doaminClassName}Controller {
 	//查
 	@RequestMapping("/findOne")
 	@ResponseBody
-	public Object findOne(${doaminClassName} ${doaminClassName?uncap_first}) {
+	public Object findOne(${domainClassName} ${domainClassName?uncap_first}) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			${doaminClassName} data = ${doaminClassName?uncap_first}Service.findOne(${doaminClassName?uncap_first});
+			${domainClassName} data = ${domainClassName?uncap_first}Service.findOne(${domainClassName?uncap_first});
 			result.put("message", "获取成功!");
 			result.put("success", true);
 			result.put("data", data);
@@ -99,10 +99,10 @@ public class ${doaminClassName}Controller {
 	public Object findAll() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<${doaminClassName}> ${doaminClassName?uncap_first}s = ${doaminClassName?uncap_first}Service.findAll();
+			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findAll();
 			result.put("message", "获取成功!");
 			result.put("success", true);
-			result.put("data", ${doaminClassName?uncap_first}s);
+			result.put("data", ${domainClassName?uncap_first}s);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("message", "获取成功!");
@@ -118,7 +118,7 @@ public class ${doaminClassName}Controller {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			Pageable pageable = new PageRequest(page-1, rows);
-			Page<${doaminClassName}> pageData = ${doaminClassName?uncap_first}Service.pageQuery(pageable);
+			Page<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.pageQuery(pageable);
 			Map<String, Object> data = new HashMap<>();
 			data.put("total", pageData.getTotalElements());
 			data.put("rows", pageData.getContent());

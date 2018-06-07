@@ -9,57 +9,57 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ${daoPackage}.${doaminClassName}Repository;
-import ${doaminPackage}.${doaminClassName};
-import ${servicePackage}.${doaminClassName}Service;
+import ${daoPackage}.${domainClassName}Repository;
+import ${domainClass};
+import ${servicePackage}.${domainClassName}Service;
 
 @Service
 @Transactional
-public class ${doaminClassName}ServiceImpl implements ${doaminClassName}Service {
+public class ${domainClassName}ServiceImpl implements ${domainClassName}Service {
 
 	@Autowired
-	private ${doaminClassName}Repository ${doaminClassName?uncap_first}Repository;
+	private ${domainClassName}Repository ${domainClassName?uncap_first}Repository;
 
 	@Override
-	public ${doaminClassName} save(${doaminClassName} ${doaminClassName?uncap_first}) {
-		return ${doaminClassName?uncap_first}Repository.save(${doaminClassName?uncap_first});
+	public ${domainClassName} save(${domainClassName} ${domainClassName?uncap_first}) {
+		return ${domainClassName?uncap_first}Repository.save(${domainClassName?uncap_first});
 	}
 
 	@Override
-	public List<${doaminClassName}> save(List<${doaminClassName}> ${doaminClassName?uncap_first}s) {
-		return ${doaminClassName?uncap_first}Repository.save(${doaminClassName?uncap_first}s);
+	public List<${domainClassName}> save(List<${domainClassName}> ${domainClassName?uncap_first}s) {
+		return ${domainClassName?uncap_first}Repository.save(${domainClassName?uncap_first}s);
 	}
 
 	@Override
-	public void delete(${doaminClassName} ${doaminClassName?uncap_first}) {
-		${doaminClassName?uncap_first}Repository.delete(${doaminClassName?uncap_first});
+	public void delete(${domainClassName} ${domainClassName?uncap_first}) {
+		${domainClassName?uncap_first}Repository.delete(${domainClassName?uncap_first});
 	}
 	
 	@Override
 	public void batchDelete(String[] ids){
 		for(String id : ids){
-			${doaminClassName?uncap_first}Repository.delete(${primaryKeyJavaType}.valueOf(id));
+			${domainClassName?uncap_first}Repository.delete(${primaryKeyJavaType}.valueOf(id));
 		}
 	}
 
 	@Override
-	public ${doaminClassName} findOne(${doaminClassName} ${doaminClassName?uncap_first}) {
-		return ${doaminClassName?uncap_first}Repository.findOne(${doaminClassName?uncap_first}.get${primaryKeyJavaName}());
+	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first}) {
+		return ${domainClassName?uncap_first}Repository.findOne(${domainClassName?uncap_first}.get${primaryKeyJavaName}());
 	}
 
 	@Override
-	public List<${doaminClassName}> findAll() {
-		return ${doaminClassName?uncap_first}Repository.findAll();
+	public List<${domainClassName}> findAll() {
+		return ${domainClassName?uncap_first}Repository.findAll();
 	}
 
 	@Override
-	public Page<${doaminClassName}> pageQuery(Pageable pageable) {
-		return ${doaminClassName?uncap_first}Repository.findAll(pageable);
+	public Page<${domainClassName}> pageQuery(Pageable pageable) {
+		return ${domainClassName?uncap_first}Repository.findAll(pageable);
 	}
 
 	@Override
-	public Page<${doaminClassName}> pageQuery(Specification<${doaminClassName}> specification, Pageable pageable) {
-		return ${doaminClassName?uncap_first}Repository.findAll(specification, pageable);
+	public Page<${domainClassName}> pageQuery(Specification<${domainClassName}> specification, Pageable pageable) {
+		return ${domainClassName?uncap_first}Repository.findAll(specification, pageable);
 	}
 
 }

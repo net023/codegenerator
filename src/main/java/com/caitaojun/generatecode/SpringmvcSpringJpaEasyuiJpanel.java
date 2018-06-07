@@ -29,6 +29,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 
+import com.caitaojun.utils.ClassSearchUtil;
 import com.caitaojun.utils.JarFileResUtil;
 import com.caitaojun.utils.StringUtil;
 
@@ -242,7 +243,7 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", controllerPackageStr);
-				dataModel.put("doaminPackage", domainPackageStr);
+				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
 				String[] htmlPathSeparator = htmlPathStr.split("/");
@@ -260,7 +261,7 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				}
 				dataModel.put("resPathPrefix", resPathPrefix);
 				for (Class clazz : selectedDomainClass) {
-					dataModel.put("doaminClassName", clazz.getSimpleName());
+					dataModel.put("domainClassName", clazz.getSimpleName());
 					//获取所有的字段
 					List<String>  allFieldNames = getClassAllFieldNames(clazz);
 					dataModel.put("fieldNames", allFieldNames);
@@ -319,11 +320,12 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", controllerPackageStr);
-				dataModel.put("doaminPackage", domainPackageStr);
+				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
 				for (Class clazz : selectedDomainClass) {
-					dataModel.put("doaminClassName", clazz.getSimpleName());
+					dataModel.put("domainClass", clazz.getName());
+					dataModel.put("domainClassName", clazz.getSimpleName());
 					dataModel.put("primaryKeyJavaType", getClassPrimaryKeyTypeName(clazz).get("type"));
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
@@ -353,6 +355,14 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 			}
 
 			private Map<String, String> getClassPrimaryKeyTypeName(Class clazz) {
+				Annotation[] classAnnotations = clazz.getDeclaredAnnotations();
+				boolean hasEntityAnnotation = false;
+				for (Annotation annotation : classAnnotations) {
+					if(annotation.annotationType().getName().equals("javax.persistence.Entity")){
+						hasEntityAnnotation = true;
+					}
+				}
+				
 				Field[] declaredFields = clazz.getDeclaredFields();
 				//javax.persistence.Id
 				Map<String, String> primaryKeyData = new HashMap<>();
@@ -368,9 +378,9 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 						}
 					}
 				}
-				if(primaryKeyData.get("name")==null){
-					JOptionPane.showMessageDialog(null, "jpa要求PoJo实体类设置id");
-					throw new RuntimeException("jpa要求PoJo实体类设置id");
+				if(primaryKeyData.get("name")==null || !hasEntityAnnotation){
+					JOptionPane.showMessageDialog(null, "jpa要求PoJo实体类("+clazz.getSimpleName()+")设置@Entity、@id");
+					throw new RuntimeException("jpa要求PoJo实体类("+clazz.getSimpleName()+")设置@Entity、@id");
 				}
 				return primaryKeyData;
 			}
@@ -387,12 +397,14 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", controllerPackageStr);
-				dataModel.put("doaminPackage", domainPackageStr);
+				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
 				for (Class clazz : selectedDomainClass) {
-					dataModel.put("doaminClassName", clazz.getSimpleName());
+					dataModel.put("domainClass", clazz.getName());
+					dataModel.put("domainClassName", clazz.getSimpleName());
 					dataModel.put("primaryKeyJavaName", StringUtil.changeFirstCharToUpper(getClassPrimaryKeyTypeName(clazz).get("name")));
+					dataModel.put("primaryKeyJavaType", getClassPrimaryKeyTypeName(clazz).get("type"));
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);
@@ -452,11 +464,12 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", controllerPackageStr);
-				dataModel.put("doaminPackage", domainPackageStr);
+				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
 				for (Class clazz : selectedDomainClass) {
-					dataModel.put("doaminClassName", clazz.getSimpleName());
+					dataModel.put("domainClass", clazz.getName());
+					dataModel.put("domainClassName", clazz.getSimpleName());
 //					dataModel.put("primaryKeyJavaTypeName", getClassPrimaryKeyTypeName(clazz).get("type"));
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
@@ -553,23 +566,25 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 					e1.printStackTrace();
 				}
 			}
-			private void showDomainClassName(String domainPackageStr) throws IOException, ClassNotFoundException {
+			private void showDomainClassName(String domainPackageStr) throws Exception {
 				//根据路径去找domain实体类
-				domainPackageStr = domainPackageStr.replace(".", "/");
+//				domainPackageStr = domainPackageStr.replace(".", "/");
+				
 //				System.out.println(domainPackageStr);
 //				System.out.println(System.getProperty("user.dir"));
 //				URL resource = Thread.currentThread().getContextClassLoader().getResource(domainPackageStr);
 //				File fileDir = new File(resource.getPath());
 				
-				String userDir = System.getProperty("user.dir");
-				File fileDir = new File(userDir+"/target/classes/"+domainPackageStr);
-				if(!fileDir.exists()){
-					domainShowPanel.updateUI();//更新界面
-					return;
-				}
+//				String userDir = System.getProperty("user.dir");
+//				File fileDir = new File(userDir+"/target/classes/"+domainPackageStr);
+//				if(!fileDir.exists()){
+//					domainShowPanel.updateUI();//更新界面
+//					return;
+//				}
 				
 				classes = new ArrayList<>();
-				findClass(fileDir, classes);
+//				findClass(fileDir, classes);
+				ClassSearchUtil.findClassPlus(domainPackageStr, classes);
 				for (Class clazz: classes) {
 //					domainShowPanel.add(clazz.getSimpleName(),new JCheckBox(clazz.getSimpleName()));
 					domainShowPanel.add(new JCheckBox(clazz.getSimpleName()));

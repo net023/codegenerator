@@ -1356,7 +1356,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());
-				dataModel.put("doaminPackage", generateInfo.getDomainPackageStr());
+				dataModel.put("domainPackage", generateInfo.getDomainPackageStr());
 				dataModel.put("servicePackage", generateInfo.getServicePackageStr());
 				dataModel.put("daoPackage", generateInfo.getDaoPackageStr());
 				String[] htmlPathSeparator = generateInfo.getHtmlPathStr().split("/");
@@ -1379,7 +1379,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					if(generateClassName==null){
 						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
 					}
-					dataModel.put("doaminClassName", generateClassName);
+					dataModel.put("domainClassName", generateClassName);
 //					String domainClassStr = generateInfo.getDomainPackageStr()+"."+generateClassName;
 //					Class<?> clazz = Class.forName(domainClassStr);
 //					List<String>  allFieldNames = getClassAllFieldNames(clazz);
@@ -1443,7 +1443,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());
-				dataModel.put("doaminPackage", generateInfo.getDomainPackageStr());
+				dataModel.put("domainPackage", generateInfo.getDomainPackageStr());
 				dataModel.put("servicePackage", generateInfo.getServicePackageStr());
 				dataModel.put("daoPackage", generateInfo.getDaoPackageStr());
 				for (String tableName : selectedTableNames) {
@@ -1452,7 +1452,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					if(generateClassName==null){
 						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
 					}
-					dataModel.put("doaminClassName", generateClassName);
+					dataModel.put("domainClassName", generateClassName);
 					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable();
 					String primaryKeyType = currentIntrospectedTable.getPrimaryKeyType();
 					String javaProperty = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getJavaProperty();
@@ -1517,7 +1517,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());
-				dataModel.put("doaminPackage", generateInfo.getDomainPackageStr());
+				dataModel.put("domainPackage", generateInfo.getDomainPackageStr());
 				dataModel.put("servicePackage", generateInfo.getServicePackageStr());
 				dataModel.put("daoPackage", generateInfo.getDaoPackageStr());
 				
@@ -1527,7 +1527,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					if(generateClassName==null){
 						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
 					}
-					dataModel.put("doaminClassName", generateClassName);
+					dataModel.put("domainClassName", generateClassName);
 					String projectPath = System.getProperty("user.dir");
 					String actionPath = generateInfo.getControllerPackageStr().replace(".", "\\");
 					String actionFilePath = projectPath+"\\src\\main\\java"+"\\"+actionPath;
