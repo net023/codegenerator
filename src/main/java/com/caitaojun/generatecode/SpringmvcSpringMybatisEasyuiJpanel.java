@@ -1426,7 +1426,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					Map<String, Object> tableInfo = data_new.get(tableName);
 					Object generateClassName = tableInfo.get("generateClassName");
 					if(generateClassName==null){
-						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
+						generateClassName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(tableName));
 					}
 					dataModel.put("domainClassName", generateClassName);
 //					String domainClassStr = generateInfo.getDomainPackageStr()+"."+generateClassName;
@@ -1499,7 +1499,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					Map<String, Object> tableInfo = data_new.get(tableName);
 					Object generateClassName = tableInfo.get("generateClassName");
 					if(generateClassName==null){
-						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
+						generateClassName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(tableName));
 					}
 					dataModel.put("domainClassName", generateClassName);
 					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable();
@@ -1576,7 +1576,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					Map<String, Object> tableInfo = data_new.get(tableName);
 					Object generateClassName = tableInfo.get("generateClassName");
 					if(generateClassName==null){
-						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
+						generateClassName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(tableName));
 					}
 					dataModel.put("domainClassName", generateClassName);
 //					String projectPath = System.getProperty("user.dir");

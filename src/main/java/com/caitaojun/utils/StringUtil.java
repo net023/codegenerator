@@ -27,7 +27,7 @@ public class StringUtil {
 	
 	//转变表的列名为驼峰类型   user_id //第一个字符小写
 	public static String changeColumnNameToHumpName(String src){
-		String lowerStr = changeFirstCharToLower(src);
+		String lowerStr = src.toLowerCase();
 		if(StringUtility.stringContainsSQLWildcard(lowerStr)){
 			String[] splits = lowerStr.split("_");
 			StringBuffer sbf = new StringBuffer();

@@ -82,7 +82,7 @@ public class MybatisGenerate {
 		MybatisGenerate.iscover = iscover;
 		MybatisGenerate.tableInfos = tableInfos;
 		Configuration configuration = new Configuration();
-		Context context = new Context(ModelType.CONDITIONAL);
+		Context context = new Context(ModelType.FLAT);
 		//配置生成文件的编码
 		context.addProperty("javaFileEncoding", "UTF-8");
 		//设置Context的id
