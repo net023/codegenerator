@@ -83,10 +83,10 @@ public class CtjCodeGenerator extends JFrame {
 		);
 		
 		StrutsSpringJpaEasyuiJpanel strutsSpringJpaEasyuiJpnel = new StrutsSpringJpaEasyuiJpanel();
-		tabbedPane.addTab("struts2+spring+jpa+easyui模板", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/jpa.png")), strutsSpringJpaEasyuiJpnel, null);
+		tabbedPane.addTab("struts2+spring+jpa", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/jpa.png")), strutsSpringJpaEasyuiJpnel, null);
 		
 		SpringmvcSpringJpaEasyuiJpanel springmvcSpringJpaEasyuiJpanel = new SpringmvcSpringJpaEasyuiJpanel();
-		tabbedPane.addTab("springmvc+spring+jpa+easyui模板", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/jpa.png")), springmvcSpringJpaEasyuiJpanel, null);
+		tabbedPane.addTab("springmvc+spring+jpa", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/jpa.png")), springmvcSpringJpaEasyuiJpanel, null);
 		
 		
 		
@@ -94,7 +94,7 @@ public class CtjCodeGenerator extends JFrame {
 //		tabbedPane.addTab("springmvc+spring+mybatis+easyui模板", new ImageIcon("mybatis.png"), panel, null);
 		
 		SpringmvcSpringMybatisEasyuiJpanel springMybatisEasyuiJpanel = new SpringmvcSpringMybatisEasyuiJpanel();
-		tabbedPane.addTab("springmvc+spring+mybatis+easyui模板", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/mybatis.png")), springMybatisEasyuiJpanel, null);
+		tabbedPane.addTab("springmvc+spring+mybatis", new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/mybatis.png")), springMybatisEasyuiJpanel, null);
 		
 		
 		

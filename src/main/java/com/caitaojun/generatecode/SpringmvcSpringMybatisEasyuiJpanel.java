@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -232,50 +233,66 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		txtWebapppages.setColumns(10);
 		
 		JButton button_1 = new JButton("确定");
+		
+		JComboBox frontendType = new JComboBox();
+		frontendType.setModel(new DefaultComboBoxModel(new String[] {"easyui"}));
+		
+		JLabel frontendTypeLabel = new JLabel("前端技术：");
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
-			gl_panel_2.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addComponent(lblModel)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtComnetdomain, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
-							.addGap(63)
-							.addComponent(lblMapper)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtComnetmapper, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)
-							.addGap(65)
-							.addComponent(lblDao)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtComnetdao, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
-							.addContainerGap(214, Short.MAX_VALUE))
-						.addGroup(gl_panel_2.createSequentialGroup()
-							.addComponent(lblService)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtComnetservice, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE)
-							.addGap(54)
-							.addComponent(lblController)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtComnetwebcontroller, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE)
-							.addGap(64)
-							.addComponent(lblHtml)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtWebapppages, GroupLayout.PREFERRED_SIZE, 203, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-							.addComponent(button_1)
-							.addContainerGap())))
-				.addGroup(Alignment.LEADING, gl_panel_2.createSequentialGroup()
-					.addGap(468)
-					.addComponent(label_5)
-					.addContainerGap(471, Short.MAX_VALUE))
-		);
-		gl_panel_2.setVerticalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
-					.addComponent(label_5)
-					.addGap(28)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_2.createSequentialGroup()
+									.addComponent(lblService)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtComnetservice, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE)
+									.addGap(54)
+									.addComponent(lblController)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtComnetwebcontroller, GroupLayout.PREFERRED_SIZE, 179, GroupLayout.PREFERRED_SIZE)
+									.addGap(64)
+									.addComponent(lblHtml)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(txtWebapppages, GroupLayout.PREFERRED_SIZE, 203, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+									.addComponent(button_1))
+								.addGroup(gl_panel_2.createSequentialGroup()
+									.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+										.addComponent(lblModel)
+										.addComponent(frontendTypeLabel))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+										.addComponent(frontendType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGroup(gl_panel_2.createSequentialGroup()
+											.addComponent(txtComnetdomain, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+											.addGap(63)
+											.addComponent(lblMapper)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(txtComnetmapper, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)
+											.addGap(65)
+											.addComponent(lblDao)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(txtComnetdao, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE))))))
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addGap(468)
+							.addComponent(label_5)))
+					.addContainerGap())
+		);
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addComponent(label_5)
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+								.addComponent(frontendType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(frontendTypeLabel))))
+					.addGap(12)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblModel)
 						.addComponent(txtComnetdomain, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -291,8 +308,8 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 						.addComponent(txtComnetwebcontroller, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblHtml)
 						.addComponent(txtWebapppages, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(20, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_panel_2.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(gl_panel_2.createSequentialGroup()
 					.addContainerGap(80, Short.MAX_VALUE)
 					.addComponent(button_1)
 					.addContainerGap())
@@ -325,8 +342,38 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		password.setText("123");
 		password.setColumns(10);
 		
+		
 		JButton button = new JButton("连接");
 		final JLabel connectedInfo = new JLabel("未连接...");
+		
+		dbType.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED){
+					if(connection!=null){
+						try {
+							connection.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
+					isConnected = false;
+					connectedInfo.setText("未连接...");
+					connectedInfo.setForeground(Color.red);
+					
+					if(e.getItem().equals("Mysql")){
+						url.setText("jdbc:mysql:///test");
+					}else if(e.getItem().equals("Oracle")){
+						url.setText("jdbc:oracle:thin:@127.0.0.1:1521:orcl");
+					}
+					//更新界面
+					url.updateUI();
+				}
+			}
+			
+		});
+		
 		connectedInfo.setForeground(Color.red);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1334,7 +1381,9 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 			
 			private void generateHtml(boolean iscover, GenerateInfo generateInfo,
 					Map<String, Map<String, Object>> data_new, List<String> selectedTableNames) throws ClassNotFoundException, TemplateException, IOException {
-				String projectPath = System.getProperty("user.dir");
+//				String projectPath = System.getProperty("user.dir");
+				String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+				projectPath = projectPath.split("target")[0];
 				//复制资源com/caitaojun/js到webapp目录下
 //				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
 				String webappPath = null;
@@ -1460,7 +1509,9 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					dataModel.put("primaryKeyType", shortName);
 					dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(javaProperty));
 					
-					String projectPath = System.getProperty("user.dir");
+//					String projectPath = System.getProperty("user.dir");
+					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+					projectPath = projectPath.split("target")[0];
 					String servicePath = generateInfo.getServicePackageStr().replace(".", "\\");
 					String serviceFilePath = projectPath+"\\src\\main\\java"+"\\"+servicePath;
 					File file = new File(serviceFilePath);
@@ -1528,7 +1579,9 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 						generateClassName = StringUtil.changeFirstCharToUpper(tableName);
 					}
 					dataModel.put("domainClassName", generateClassName);
-					String projectPath = System.getProperty("user.dir");
+//					String projectPath = System.getProperty("user.dir");
+					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+					projectPath = projectPath.split("target")[0];
 					String actionPath = generateInfo.getControllerPackageStr().replace(".", "\\");
 					String actionFilePath = projectPath+"\\src\\main\\java"+"\\"+actionPath;
 					File file = new File(actionFilePath);
@@ -1552,5 +1605,4 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 			}
 		});
 	}
-
 }

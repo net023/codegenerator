@@ -36,6 +36,8 @@ import com.caitaojun.utils.StringUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 
@@ -221,7 +223,9 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 			}
 
 			private void generateHtml(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
-				String projectPath = System.getProperty("user.dir");
+//				String projectPath = System.getProperty("user.dir");
+				String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+				projectPath = projectPath.split("target")[0];
 				//复制资源com/caitaojun/js到webapp目录下
 //				String webappPath = projectPath+"\\src\\main"+"\\webapp\\js";
 				String webappPath = null;
@@ -331,7 +335,9 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);
 					//D:\ProgramFiles\workspace\czbk\generatecode
-					String projectPath = System.getProperty("user.dir");
+//					String projectPath = System.getProperty("user.dir");
+					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+					projectPath = projectPath.split("target")[0];
 					String daoPath = daoPackageStr.replace(".", "\\");
 					String daoFilePath = projectPath+"\\src\\main\\java"+"\\"+daoPath;
 					File file = new File(daoFilePath);
@@ -409,7 +415,9 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);
 					//D:\ProgramFiles\workspace\czbk\generatecode
-					String projectPath = System.getProperty("user.dir");
+//					String projectPath = System.getProperty("user.dir");
+					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+					projectPath = projectPath.split("target")[0];
 					String servicePath = servicePackageStr.replace(".", "\\");
 					String serviceFilePath = projectPath+"\\src\\main\\java"+"\\"+servicePath;
 					File file = new File(serviceFilePath);
@@ -475,7 +483,9 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);
 					//D:\ProgramFiles\workspace\czbk\generatecode
-					String projectPath = System.getProperty("user.dir");
+//					String projectPath = System.getProperty("user.dir");
+					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
+					projectPath = projectPath.split("target")[0];
 					String actionPath = controllerPackageStr.replace(".", "\\");
 					String actionFilePath = projectPath+"\\src\\main\\java"+"\\"+actionPath;
 					File file = new File(actionFilePath);
@@ -598,6 +608,11 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 		txtComnetdao = new JTextField();
 		txtComnetdao.setText("com.caitaojun.dao");
 		txtComnetdao.setColumns(10);
+		
+		JLabel frontEndLabel = new JLabel("前端技术：");
+		JComboBox frontEndcomboBox = new JComboBox();
+		frontEndcomboBox.setModel(new DefaultComboBoxModel(new String[] {"easyui"}));
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -615,17 +630,28 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 						.addComponent(txtComnetdao)
 						.addComponent(txtComnetservice)
 						.addComponent(txtComnetdomain, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
-					.addGap(219)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(lblController)
-							.addGap(4)
-							.addComponent(txtComnetwebcontroller, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+							.addGap(219)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(lblController)
+									.addGap(4)
+									.addComponent(txtComnetwebcontroller, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(lblHtml)
+									.addGap(18)
+									.addComponent(txtWebapppages))))
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(lblHtml)
-							.addGap(18)
-							.addComponent(txtWebapppages)))
-					.addPreferredGap(ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+								.addGap(219)
+								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING,false)
+										.addGroup(gl_panel.createSequentialGroup()
+												.addComponent(frontEndLabel)
+												.addGap(18)
+												.addComponent(frontEndcomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))	
+								)
+						))
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addComponent(pathCfgConfirmBtn)
 					.addContainerGap())
 		);
@@ -645,13 +671,15 @@ public class SpringmvcSpringJpaEasyuiJpanel extends JPanel {
 						.addComponent(txtComnetservice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblHtml)
 						.addComponent(txtWebapppages, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addGap(12)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblDao)
-						.addComponent(txtComnetdao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtComnetdao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(frontEndcomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(frontEndLabel))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap(90, Short.MAX_VALUE)
+					.addContainerGap(97, Short.MAX_VALUE)
 					.addComponent(pathCfgConfirmBtn)
 					.addContainerGap())
 		);
