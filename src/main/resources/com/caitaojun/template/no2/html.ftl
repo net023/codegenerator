@@ -55,7 +55,14 @@
 							return html;
 						}
 					} 
-					] ]
+					] ],
+					loadFilter:function(data){
+						if(data.success){
+							return data.data;
+						}else{
+							$.messager.alert('操作提示',data.message,'error');
+						}
+					}
 				});
 				
 				//编辑窗口
@@ -73,11 +80,18 @@
 							text:'保存',
 							iconCls:'icon-save',
 							handler:function(){
-								alert(1);
 								if($("#${domainClassName?uncap_first}Form").form("validate")){
-									$("#${domainClassName?uncap_first}Form").submit();
-									$("#${domainClassName?uncap_first}EditDialog").dialog("close");
-									$("#${domainClassName?uncap_first}Grid").datagrid("reload");
+									$("#${domainClassName?uncap_first}Form").form("submit",{
+										success:function(data){
+											data = eval('(' + data + ')');
+											if(data.success){
+												$("#${domainClassName?uncap_first}EditDialog").dialog("close");
+												$("#${domainClassName?uncap_first}Grid").datagrid("reload");
+											}else{
+												$.messager.alert('操作提示',data.message,'error');
+											}
+										}
+									});
 								}else{
 									$.messager.alert("请检查表单数据");
 								}
@@ -149,10 +163,12 @@
 		        $('#${domainClassName?uncap_first}EditDialog').dialog('open').dialog("setTitle","添加");
 			}
 			
-			function search(){
+			function dosearch(){
 				var searchObj = {};
 				<#list fieldNames as field>
-					searchObj.${field} = $("#query_${field}").val();
+					if($("#query_${field}").val()){
+						searchObj.${field} = $("#query_${field}").val();
+					}
 				</#list>
 				$('#${domainClassName?uncap_first}Grid').datagrid('load',searchObj);
 			}
@@ -171,7 +187,7 @@
 				<#list fieldNames as field>
 					${field}: <input style="width:80px" id="query_${field}">
 				</#list>
-				<a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="search()">查询</a>
+				<a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="dosearch()">查询</a>
 			</div>
 		</div>
 		<div id="${domainClassName?uncap_first}EditDialog">

@@ -3,6 +3,7 @@ package ${actionPackage};
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
@@ -14,7 +15,18 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -26,12 +38,15 @@ import ${servicePackage}.${domainClassName}Service;
 @ParentPackage("json-default")
 @Namespace("/${domainClassName?uncap_first}")
 @Controller
-@Scope("prototye")
+@Scope("prototype")
 public class ${domainClassName}Action extends ActionSupport implements ModelDriven<${domainClassName}>{
 	private ${domainClassName} ${domainClassName?uncap_first} = new ${domainClassName}();
 	
 	private int page;
 	private int rows;
+	private String sort;
+	private String order;
+	private String ids;
 	
 	public void setPage(int page) {
 		this.page = page;
@@ -39,9 +54,12 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-	
-	private String ids;
-	
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+	public void setOrder(String order) {
+		this.order = order;
+	}
 	public void setIds(String ids) {
 		this.ids = ids;
 	}
@@ -66,7 +84,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "保存成功!");
+			result.put("message", "保存失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);
@@ -83,7 +101,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "删除失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);
@@ -100,7 +118,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "删除失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);
@@ -118,7 +136,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "获取成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);
@@ -136,7 +154,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 			result.put("data", ${domainClassName?uncap_first}s);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "获取成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);
@@ -148,17 +166,51 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	public String pageQuery() {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			Pageable pageable = new PageRequest(page-1, rows);
-			Page<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.pageQuery(pageable);
+			Pageable pageable = null;
+			if(sort!=null){
+				Direction direction = null;
+				if("desc".equals(order)){
+					direction = Direction.DESC;
+				}else{
+					direction = Direction.ASC;
+				}
+				Order order = new Sort.Order(direction,sort);
+				Sort sort = new Sort(order);
+				pageable = new PageRequest(page - 1, rows,sort);
+			}else{
+				pageable = new PageRequest(page - 1, rows);
+			}
+			Page<${domainClassName}> pageData = null;
+			if(${domainClassName?uncap_first}==null){
+				pageData = ${domainClassName?uncap_first}Service.pageQuery(pageable);
+			}else{
+				Specification<${domainClassName}> spec = new Specification<${domainClassName}>() {
+					@Override
+					public Predicate toPredicate(Root<${domainClassName}> root,
+							CriteriaQuery<?> query, CriteriaBuilder cb) {
+						List<Predicate> list = new ArrayList<Predicate>();
+						<#list fieldNameAndFieldTypeNames as field>
+							if (StringUtils.isNotBlank(${domainClassName?uncap_first}.get${field.name?cap_first}())) {
+								Predicate p${field_index} = cb.equal(
+										root.get("${field.name}").as(${field.type}.class),
+										${domainClassName?uncap_first}.get${field.name?cap_first}());
+								list.add(p${field_index});
+							}
+						</#list>
+						return cb.and(list.toArray(new Predicate[0]));
+					}
+				};
+				pageData = ${domainClassName?uncap_first}Service.pageQuery(spec,pageable);
+			}
 			Map<String, Object> data = new HashMap<>();
 			data.put("total", pageData.getTotalElements());
 			data.put("rows", pageData.getContent());
-			result.put("message", "删除成功!");
+			result.put("message", "获取成功!");
 			result.put("success", true);
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		ActionContext.getContext().getValueStack().push(result);

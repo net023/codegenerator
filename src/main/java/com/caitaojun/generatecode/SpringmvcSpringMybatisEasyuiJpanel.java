@@ -1464,7 +1464,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 			private List<String> types = Arrays.asList(
 					"int","byte","short","long","float","double","boolean","char",
 					"java.lang.Integer","java.lang.Byte","java.lang.Short","java.lang.Long","java.lang.Float","java.lang.Double","java.lang.Boolean","java.lang.Character",
-					"java.lang.String"
+					"java.lang.String","java.util.Date"
 					);
 			
 			private List<String> getClassAllFieldNames(Class clazz) {

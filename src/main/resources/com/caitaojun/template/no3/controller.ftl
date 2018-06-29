@@ -14,7 +14,7 @@ import ${domainPackage}.${domainClassName};
 import ${servicePackage}.${domainClassName}Service;
 
 @Controller
-@Scope("prototye")
+@Scope("prototype")
 @RequestMapping("/${domainClassName?uncap_first}")
 public class ${domainClassName}Controller {
 	
@@ -32,7 +32,7 @@ public class ${domainClassName}Controller {
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "保存成功!");
+			result.put("message", "保存失败!");
 			result.put("success", false);
 		}
 		return result;
@@ -49,7 +49,7 @@ public class ${domainClassName}Controller {
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "删除失败!");
 			result.put("success", false);
 		}
 		return result;
@@ -66,7 +66,7 @@ public class ${domainClassName}Controller {
 			result.put("success", true);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "删除失败!");
 			result.put("success", false);
 		}
 		return result;
@@ -84,7 +84,7 @@ public class ${domainClassName}Controller {
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "获取成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		return result;
@@ -93,16 +93,16 @@ public class ${domainClassName}Controller {
 	//查全部
 	@RequestMapping("/findAll")
 	@ResponseBody
-	public Object findAll() {
+	public Object findAll(String sort,String order) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findPageData(null,null,null);
+			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findPageData(null,null,null,sort,order);
 			result.put("message", "获取成功!");
 			result.put("success", true);
 			result.put("data", ${domainClassName?uncap_first}s);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "获取成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		return result;
@@ -111,19 +111,19 @@ public class ${domainClassName}Controller {
 	//分页查
 	@RequestMapping("/pageQuery")
 	@ResponseBody
-	public Object pageQuery(${domainClassName} ${domainClassName?uncap_first},int page,int rows) {
+	public Object pageQuery(${domainClassName} ${domainClassName?uncap_first},int page,int rows,String sort,String order) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-			List<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.findPageData(${domainClassName?uncap_first}, page, rows);
+			List<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.findPageData(${domainClassName?uncap_first}, page, rows, sort, order);
 			Map<String, Object> data = new HashMap<>();
 			data.put("total", ${domainClassName?uncap_first}Service.selectCount(${domainClassName?uncap_first}));
 			data.put("rows", pageData);
-			result.put("message", "删除成功!");
+			result.put("message", "获取成功!");
 			result.put("success", true);
 			result.put("data", data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", "删除成功!");
+			result.put("message", "获取失败!");
 			result.put("success", false);
 		}
 		return result;

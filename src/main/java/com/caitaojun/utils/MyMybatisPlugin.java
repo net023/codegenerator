@@ -137,7 +137,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		List<String> types = Arrays.asList(
 				"int","byte","short","long","float","double","boolean","char",
 				"java.lang.Integer","java.lang.Byte","java.lang.Short","java.lang.Long","java.lang.Float","java.lang.Double","java.lang.Boolean","java.lang.Character",
-				"java.lang.String"
+				"java.lang.String","java.util.Date"
 				);
 		for (org.mybatis.generator.api.dom.java.Field field : fields) {
 			String fullyQualifiedName = field.getType().getFullyQualifiedName();
@@ -191,9 +191,13 @@ public class MyMybatisPlugin extends PluginAdapter {
 		Parameter parameter1 = new Parameter(new FullyQualifiedJavaType(domainObjectName), "pojo","@Param(\"pojo\")");
 		Parameter parameter2 = new Parameter(new FullyQualifiedJavaType("java.lang.Integer"), "index","@Param(\"limitIndex\")");
 		Parameter parameter3 = new Parameter(new FullyQualifiedJavaType("java.lang.Integer"), "size","@Param(\"limitSize\")");
+		Parameter parameter4 = new Parameter(new FullyQualifiedJavaType("java.lang.String"), "sort","@Param(\"sort\")");
+		Parameter parameter5 = new Parameter(new FullyQualifiedJavaType("java.lang.String"), "order","@Param(\"order\")");
 		selectPageBySelective.addParameter(parameter1);
 		selectPageBySelective.addParameter(parameter2);
 		selectPageBySelective.addParameter(parameter3);
+		selectPageBySelective.addParameter(parameter4);
+		selectPageBySelective.addParameter(parameter5);
 		interfaze.addMethod(selectPageBySelective);
 		interfaze.addImportedType(new FullyQualifiedJavaType("java.util.List"));
 		interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param"));
@@ -240,7 +244,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		tc.addProperty("field", info.getMyFieldName());
 		tc.addProperty("joinField", info.getPartyFieldName());
 		 */
-		System.out.println("ctj...");
+//		System.out.println("ctj...");
 		//给插入添加返回主键值
 		List<Element> elements = document.getRootElement().getElements();
 		for (Element element : elements) {
@@ -270,13 +274,15 @@ public class MyMybatisPlugin extends PluginAdapter {
 		XmlElement judgeParamter = new XmlElement("if");
 		judgeParamter.addAttribute(new Attribute("test", "_parameter != null"));
 		List<IntrospectedColumn> baseColumns = introspectedTable.getBaseColumns();
+		XmlElement selectCountWhere = new XmlElement("where");
+		judgeParamter.addElement(selectCountWhere);
 		for (IntrospectedColumn introspectedColumn : baseColumns) {
 			String javaProperty = introspectedColumn.getJavaProperty();//属性名
 			String actualColumnName = introspectedColumn.getActualColumnName();//列名
 			XmlElement judgeProperty = new XmlElement("if");
-			judgeProperty.addAttribute(new Attribute("test", "pojo."+javaProperty+"!=null"));
-			judgeProperty.addElement(new TextElement("and "+actualColumnName+"=#{pojo."+javaProperty+",jdbcType="+introspectedColumn.getJdbcTypeName()+"}"));
-			judgeParamter.addElement(judgeProperty);
+			judgeProperty.addAttribute(new Attribute("test", "_parameter."+javaProperty+"!=null"));
+			judgeProperty.addElement(new TextElement("and "+actualColumnName+"=#{_parameter."+javaProperty+",jdbcType="+introspectedColumn.getJdbcTypeName()+"}"));
+			selectCountWhere.addElement(judgeProperty);
 		}
 		selectCount.addElement(judgeParamter);
 		document.getRootElement().addElement(selectCount);
@@ -289,6 +295,10 @@ public class MyMybatisPlugin extends PluginAdapter {
 		XmlElement include = new XmlElement("include");
 		include.addAttribute(new Attribute("refid", "Base_Column_List"));
 		selectPageBySelective.addElement(include);
+		selectPageBySelective.addElement(new TextElement(","));
+		XmlElement include2 = new XmlElement("include");
+		include2.addAttribute(new Attribute("refid", "Blob_Column_List"));
+		selectPageBySelective.addElement(include2);
 		if(introspectedTable.getContext().getJdbcConnectionConfiguration().getDriverClass().contains("mysql")){
 			//mysql
 			selectPageBySelective.addElement(new TextElement("from "+introspectedTable.getTableConfiguration().getTableName()));
@@ -308,8 +318,8 @@ public class MyMybatisPlugin extends PluginAdapter {
 			where.addElement(judgepojo);
 			selectPageBySelective.addElement(where);
 			XmlElement judgeOrder = new XmlElement("if");
-			judgeOrder.addAttribute(new Attribute("test", "order!=null and orderType!=null"));
-			judgeOrder.addElement(new TextElement("order by #{order,jdbcType=VARCHAR} #{orderType,jdbcType=VARCHAR}"));
+			judgeOrder.addAttribute(new Attribute("test", "sort!=null and order!=null"));
+			judgeOrder.addElement(new TextElement("order by #{sort,jdbcType=VARCHAR} #{order,jdbcType=VARCHAR}"));
 			selectPageBySelective.addElement(judgeOrder);
 			XmlElement judgeLimitIndex = new XmlElement("if");
 			judgeLimitIndex.addAttribute(new Attribute("test", "limitIndex!=null"));
@@ -346,8 +356,8 @@ public class MyMybatisPlugin extends PluginAdapter {
 			selectPageBySelective.addElement(where);
 			
 			XmlElement judgeOrder = new XmlElement("if");
-			judgeOrder.addAttribute(new Attribute("test", "order!=null and orderType!=null"));
-			judgeOrder.addElement(new TextElement("order by ${order} ${orderType}"));
+			judgeOrder.addAttribute(new Attribute("test", "sort!=null and order!=null"));
+			judgeOrder.addElement(new TextElement("order by ${sort} ${order}"));
 			selectPageBySelective.addElement(judgeOrder);
 			
 			selectPageBySelective.addElement(new TextElement(")t"));

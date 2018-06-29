@@ -266,7 +266,7 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 				dataModel.put("resPathPrefix", resPathPrefix);
 				for (Class clazz : selectedDomainClass) {
 					dataModel.put("domainClassName", clazz.getSimpleName());
-					//获取所有的字段
+					//获取所有的字段名称
 					List<String>  allFieldNames = getClassAllFieldNames(clazz);
 					dataModel.put("fieldNames", allFieldNames);
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
@@ -298,7 +298,7 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 			private List<String> types = Arrays.asList(
 					"int","byte","short","long","float","double","boolean","char",
 					"java.lang.Integer","java.lang.Byte","java.lang.Short","java.lang.Long","java.lang.Float","java.lang.Double","java.lang.Boolean","java.lang.Character",
-					"java.lang.String"
+					"java.lang.String","java.util.Date"
 					);
 			
 			private List<String> getClassAllFieldNames(Class clazz) {
@@ -311,6 +311,21 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 					}
 				}
 				return fieldNames;
+			}
+			
+			private List<Map<String,String>> getClassAllFieldNameAndFieldTypeName(Class clazz) {
+				Field[] declaredFields = clazz.getDeclaredFields();
+				List<Map<String,String>> fieldNameAndFieldType = new ArrayList<>();
+				for (Field field : declaredFields) {
+					//判断属性字段不是集合类型  不是自定义引用类型
+					if(types.contains(field.getType().getCanonicalName())){
+						Map<String, String> fieldData = new HashMap<String,String>();
+						fieldData.put("name", field.getName());
+						fieldData.put("type", field.getType().getName());
+						fieldNameAndFieldType.add(fieldData);
+					}
+				}
+				return fieldNameAndFieldType;
 			}
 
 			private void generateDao(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
@@ -478,6 +493,9 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 				for (Class clazz : selectedDomainClass) {
 					dataModel.put("domainClass", clazz.getName());
 					dataModel.put("domainClassName", clazz.getSimpleName());
+					//获取所有的字段名称及其类型
+					List<Map<String,String>> fieldNameAndFieldTypeNames = getClassAllFieldNameAndFieldTypeName(clazz);
+					dataModel.put("fieldNameAndFieldTypeNames", fieldNameAndFieldTypeNames);
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
 //					System.out.println(canonicalPath);

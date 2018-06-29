@@ -19,7 +19,11 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 
 	@Override
 	public ${domainClassName} save(${domainClassName} ${domainClassName?uncap_first}) {
-		${domainClassName?uncap_first}Dao.insertSelective(${domainClassName?uncap_first});
+		if(${domainClassName?uncap_first}.get${primaryKeyName}()==null){
+			${domainClassName?uncap_first}Dao.insertSelective(${domainClassName?uncap_first});
+		}else{
+			${domainClassName?uncap_first}Dao.updateByPrimaryKeySelective(${domainClassName?uncap_first});
+		}
 		return ${domainClassName?uncap_first};
 	}
 
@@ -49,8 +53,8 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 	}
 	
 	@Override
-	public List<${domainClassName}> findPageData(${domainClassName} pojo,Integer pageNumber,Integer pageSize) {
-		return ${domainClassName?uncap_first}Dao.selectPageBySelective(pojo, (pageNumber-1)*pageSize, pageSize);
+	public List<${domainClassName}> findPageData(${domainClassName} pojo,Integer pageNumber,Integer pageSize,String sort,String order) {
+		return ${domainClassName?uncap_first}Dao.selectPageBySelective(pojo, (pageNumber-1)*pageSize, pageSize, sort, order);
 	}
 
 	@Override

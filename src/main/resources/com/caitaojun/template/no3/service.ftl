@@ -15,7 +15,7 @@ public interface ${domainClassName}Service {
 	
 	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first});
 	
-	public List<${domainClassName}> findPageData(${domainClassName} pojo,Integer pageNumber,Integer pageSize);
+	public List<${domainClassName}> findPageData(${domainClassName} pojo,Integer pageNumber,Integer pageSize,String sort,String order);
 
 	public Integer selectCount(${domainClassName} ${domainClassName?uncap_first});	
 }
