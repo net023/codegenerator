@@ -2,6 +2,8 @@ package com.caitaojun.generatecode;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +33,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -68,6 +71,8 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 //	private Map<String,List<Map<String, String>>> data = new HashMap<>();
 //	private Map<String,Map<String,List<Map<String, String>>>> data_new = new HashMap<>();
 	private Map<String,Map<String,Object>> data_new = new HashMap<>();
+	private boolean useDefaultTemplate = true;
+	private Map<String, File> importTemplates = new HashMap<>();
 
 	/**
 	 * 
@@ -238,6 +243,87 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		frontendType.setModel(new DefaultComboBoxModel(new String[] {"easyui"}));
 		
 		JLabel frontendTypeLabel = new JLabel("前端技术：");
+		
+		JLabel templateLabel = new JLabel("模板导入:");
+		
+		JComboBox templatecomboBox = new JComboBox();
+		templatecomboBox.setModel(new DefaultComboBoxModel(new String[] {"默认模板", "导入模板"}));
+		
+templatecomboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox box = (JComboBox) e.getSource();
+				if(box.getSelectedItem().equals("导入模板")){
+					useDefaultTemplate = false;
+					final JDialog chooserDialog = new JDialog(MybatisGenerate.currentJframe, "选择模板文件", true);
+					chooserDialog.setIconImage(new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/ctj.png")).getImage());
+					chooserDialog.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
+					chooserDialog.setResizable(false);
+					chooserDialog.setSize(500, 150);
+					chooserDialog.setLocationRelativeTo(null);
+					JButton btnServiceInterface = new JButton("导入service接口模板");
+					chooserDialog.add(btnServiceInterface);
+					JButton btnServiceImpl = new JButton("导入service实现类模板");
+					chooserDialog.add(btnServiceImpl);
+					JButton btnController = new JButton("导入controller模板");
+					chooserDialog.add(btnController);
+					JButton btnHtml = new JButton("导入html模板");
+					chooserDialog.add(btnHtml);
+					
+					final JFileChooser chooserServiceInterface = new JFileChooser();
+					chooserServiceInterface.setDialogTitle("打开service接口模板文件");
+					final JFileChooser chooserServiceImpl = new JFileChooser();
+					chooserServiceImpl.setDialogTitle("打开service模板文件");
+					final JFileChooser chooserController = new JFileChooser();
+					chooserController.setDialogTitle("打开controller模板文件");
+					final JFileChooser chooserHtml = new JFileChooser();
+					chooserHtml.setDialogTitle("打开Html模板文件");
+					
+					btnServiceInterface.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserServiceInterface.showOpenDialog(chooserDialog);
+						}
+					});
+					btnServiceImpl.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserServiceImpl.showOpenDialog(chooserDialog);
+						}
+					});
+					btnController.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserController.showOpenDialog(chooserDialog);
+						}
+					});
+					btnHtml.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserHtml.showOpenDialog(chooserDialog);
+						}
+					});
+					
+					chooserDialog.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent e) {
+							importTemplates.put("serviceInterface", chooserServiceInterface.getSelectedFile());
+							importTemplates.put("serviceImpl", chooserServiceImpl.getSelectedFile());
+							importTemplates.put("action", chooserController.getSelectedFile());
+							importTemplates.put("html", chooserHtml.getSelectedFile());
+							super.windowClosing(e);
+						}
+						
+					});
+					
+					chooserDialog.setVisible(true);
+				}else{
+					useDefaultTemplate = false;
+				}
+			}
+		});
+		
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
@@ -266,7 +352,12 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 										.addComponent(frontendTypeLabel))
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-										.addComponent(frontendType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGroup(gl_panel_2.createSequentialGroup()
+											.addComponent(frontendType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(templateLabel)
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addComponent(templatecomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 										.addGroup(gl_panel_2.createSequentialGroup()
 											.addComponent(txtComnetdomain, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
 											.addGap(63)
@@ -291,7 +382,9 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 							.addContainerGap()
 							.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
 								.addComponent(frontendType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(frontendTypeLabel))))
+								.addComponent(frontendTypeLabel)
+								.addComponent(templateLabel)
+								.addComponent(templatecomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addGap(12)
 					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblModel)
@@ -327,7 +420,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 		JLabel label_1 = new JLabel("连接地址：");
 		
 		url = new JTextField();
-		url.setText("jdbc:mysql:///test");
+		url.setText("jdbc:mysql://127.0.0.1:3306/test");
 		url.setColumns(10);
 		
 		JLabel label_2 = new JLabel("用户名：");
@@ -363,7 +456,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					connectedInfo.setForeground(Color.red);
 					
 					if(e.getItem().equals("Mysql")){
-						url.setText("jdbc:mysql:///test");
+						url.setText("jdbc:mysql://127.0.0.1:3306/test");
 					}else if(e.getItem().equals("Oracle")){
 						url.setText("jdbc:oracle:thin:@127.0.0.1:1521:orcl");
 					}
@@ -414,7 +507,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 									}
 									
 									JDialog internal = new JDialog(MybatisGenerate.currentJframe, "属性设置", true);
-									internal.setIconImage(new ImageIcon("ctj.png").getImage());
+									internal.setIconImage(new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/ctj.png")).getImage());
 									internal.setResizable(false);
 									internal.setSize(1200, 500);
 									//internal.setResizable(false);
@@ -1396,12 +1489,26 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 				}
 				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no3").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
-				Template template = config.getTemplate("html.ftl");
+				
+				Template template = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+					template = config.getTemplate("html.ftl");
+				}else{
+					File templateFile = importTemplates.get("html");
+					if(templateFile!=null){
+						config.setDirectoryForTemplateLoading(templateFile.getParentFile());
+						template = config.getTemplate(templateFile.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+						template = config.getTemplate("html.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());
@@ -1482,13 +1589,36 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 			private void generateService(boolean iscover, GenerateInfo generateInfo,
 					Map<String, Map<String, Object>> data_new, List<String> selectedTableNames) throws IOException, TemplateException {
 				//生成service代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no3").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
-				Template template = config.getTemplate("service.ftl");
-				Template template2 = config.getTemplate("serviceimpl.ftl");
+				
+				Template template = null;
+				Template template2 = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+					template = config.getTemplate("service.ftl");
+					template2 = config.getTemplate("serviceimpl.ftl");
+				}else{
+					File templateFile1 = importTemplates.get("serviceInterface");
+					File templateFile2 = importTemplates.get("serviceImpl");
+					if(templateFile1!=null){
+						config.setDirectoryForTemplateLoading(templateFile1.getParentFile());
+						template = config.getTemplate(templateFile1.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+						template = config.getTemplate("service.ftl");
+					}
+					if(templateFile2!=null){
+						config.setDirectoryForTemplateLoading(templateFile2.getParentFile());
+						template2 = config.getTemplate(templateFile2.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+						template2 = config.getTemplate("serviceimpl.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());
@@ -1506,7 +1636,7 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 					String primaryKeyType = currentIntrospectedTable.getPrimaryKeyType();
 					String javaProperty = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getJavaProperty();
 					String shortName = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName();
-					dataModel.put("primaryKeyType", shortName);
+					dataModel.put("primaryKeyJavaType", shortName);
 					dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(javaProperty));
 					
 //					String projectPath = System.getProperty("user.dir");
@@ -1559,12 +1689,26 @@ public class SpringmvcSpringMybatisEasyuiJpanel extends JPanel {
 			private void generateAction(boolean iscover, GenerateInfo generateInfo,
 					Map<String, Map<String, Object>> data_new, List<String> selectedTableNames) throws TemplateException, IOException {
 				//生成controller代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no3").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
-				Template template = config.getTemplate("controller.ftl");
+				
+				Template template = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no3");
+					template = config.getTemplate("controller.ftl");
+				}else{
+					File templateFile = importTemplates.get("action");
+					if(templateFile!=null){
+						config.setDirectoryForTemplateLoading(templateFile.getParentFile());
+						template = config.getTemplate(templateFile.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/n3");
+						template = config.getTemplate("controller.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//controllerPackage  servicePackage htmlPath domainName
 				dataModel.put("controllerPackage", generateInfo.getControllerPackageStr());

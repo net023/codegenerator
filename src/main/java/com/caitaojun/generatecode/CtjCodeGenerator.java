@@ -133,6 +133,7 @@ public class CtjCodeGenerator extends JFrame {
 				}
 			}
 		});
+		label.setForeground(Color.red);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel contact = new JLabel("[点击加入]技术交流QQ群：646224436");
 		contact.addMouseListener(new MouseAdapter() {

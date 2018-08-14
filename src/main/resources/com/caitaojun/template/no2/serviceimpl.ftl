@@ -44,7 +44,7 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 
 	@Override
 	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first}) {
-		return ${domainClassName?uncap_first}Repository.findOne(${domainClassName?uncap_first}.get${primaryKeyJavaName}());
+		return ${domainClassName?uncap_first}Repository.findOne(${domainClassName?uncap_first}.get${primaryKeyName}());
 	}
 
 	@Override

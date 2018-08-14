@@ -169,6 +169,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		Object relationTableInfos = MybatisGenerate.tableInfos.get(introspectedTable.getTableConfiguration().getTableName()).get("relationTableInfos");
 		if(null!=relationTableInfos && (relationTableInfosSizeStr!=null&&!relationTableInfosSizeStr.equals("0"))){
 			Method method = new Method("selectRelationDataByPrimaryKey");
+			method.addJavaDocLine("//根据主键查询对象数据，关联对象数据也一起查询");
 			String domainObjectName = introspectedTable.getTableConfiguration().getDomainObjectName();
 			if(domainObjectName==null){
 				domainObjectName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(introspectedTable.getTableConfiguration().getTableName()));
@@ -182,6 +183,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		}
 		//添加一个带条件的分页查询
 		Method selectPageBySelective = new Method("selectPageBySelective");
+		selectPageBySelective.addJavaDocLine("//带条件的分页查询");
 		String domainObjectName = introspectedTable.getTableConfiguration().getDomainObjectName();
 		if(domainObjectName==null){
 			domainObjectName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(introspectedTable.getTableConfiguration().getTableName()));
@@ -204,6 +206,7 @@ public class MyMybatisPlugin extends PluginAdapter {
 		
 		//添加统计查询Count
 		Method selectCount = new Method("selectCount");
+		selectCount.addJavaDocLine("//根据条件进行统计查询");
 		selectCount.setReturnType(new FullyQualifiedJavaType("java.lang.Integer"));
 		Parameter pojo = new Parameter(new FullyQualifiedJavaType(domainObjectName), "pojo");
 		selectCount.addParameter(pojo);
@@ -295,10 +298,12 @@ public class MyMybatisPlugin extends PluginAdapter {
 		XmlElement include = new XmlElement("include");
 		include.addAttribute(new Attribute("refid", "Base_Column_List"));
 		selectPageBySelective.addElement(include);
-		selectPageBySelective.addElement(new TextElement(","));
-		XmlElement include2 = new XmlElement("include");
-		include2.addAttribute(new Attribute("refid", "Blob_Column_List"));
-		selectPageBySelective.addElement(include2);
+		if(introspectedTable.hasBLOBColumns()){
+			selectPageBySelective.addElement(new TextElement(","));
+			XmlElement include2 = new XmlElement("include");
+			include2.addAttribute(new Attribute("refid", "Blob_Column_List"));
+			selectPageBySelective.addElement(include2);
+		}
 		if(introspectedTable.getContext().getJdbcConnectionConfiguration().getDriverClass().contains("mysql")){
 			//mysql
 			selectPageBySelective.addElement(new TextElement("from "+introspectedTable.getTableConfiguration().getTableName()));

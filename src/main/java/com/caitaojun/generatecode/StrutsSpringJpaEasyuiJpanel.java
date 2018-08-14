@@ -1,15 +1,23 @@
 package com.caitaojun.generatecode;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -31,12 +40,16 @@ import javax.swing.border.LineBorder;
 
 import com.caitaojun.utils.ClassSearchUtil;
 import com.caitaojun.utils.JarFileResUtil;
+import com.caitaojun.utils.MybatisGenerate;
 import com.caitaojun.utils.StringUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.DefaultComboBoxModel;
 
 public class StrutsSpringJpaEasyuiJpanel extends JPanel {
@@ -58,6 +71,8 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 	private String servicePackageStr = null;
 	private String daoPackageStr = null;
 	private String htmlPathStr = null;
+	private boolean useDefaultTemplate = true;
+	private Map<String, File> importTemplates = new HashMap<>();
 	
 	public StrutsSpringJpaEasyuiJpanel() {
 		init();
@@ -237,15 +252,29 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 				}
 				JarFileResUtil.copyJarFileResToDirectory(webappPath);
 				//生成html代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no1").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
-				Template template = config.getTemplate("html.ftl");
+				
+				Template template = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(StrutsSpringJpaEasyuiJpanel.class, "/com/caitaojun/template/no1");
+					template = config.getTemplate("html.ftl");
+				}else{
+					File templateFile = importTemplates.get("html");
+					if(templateFile!=null){
+						config.setDirectoryForTemplateLoading(templateFile.getParentFile());
+						template = config.getTemplate(templateFile.getName());
+					}else{
+						config.setClassForTemplateLoading(StrutsSpringJpaEasyuiJpanel.class, "/com/caitaojun/template/no1");
+						template = config.getTemplate("html.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//actionPackage  servicePackage htmlPath domainName
-				dataModel.put("actionPackage", actionPackageStr);
+				dataModel.put("controllerPackage", actionPackageStr);
 				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
@@ -330,15 +359,29 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 
 			private void generateDao(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
 				//生成dao代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no1").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
-				Template template = config.getTemplate("dao.ftl");
+				
+				Template template = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(StrutsSpringJpaEasyuiJpanel.class, "/com/caitaojun/template/no1");
+					template = config.getTemplate("dao.ftl");
+				}else{
+					File templateFile = importTemplates.get("dao");
+					if(templateFile!=null){
+						config.setDirectoryForTemplateLoading(templateFile.getParentFile());
+						template = config.getTemplate(templateFile.getName());
+					}else{
+						config.setClassForTemplateLoading(StrutsSpringJpaEasyuiJpanel.class, "/com/caitaojun/template/no1");
+						template = config.getTemplate("dao.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//actionPackage  servicePackage htmlPath domainName
-				dataModel.put("actionPackage", actionPackageStr);
+				dataModel.put("controllerPackage", actionPackageStr);
 				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
@@ -408,23 +451,45 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 
 			private void generateService(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
 				//生成service代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no1").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
-				Template template = config.getTemplate("service.ftl");
-				Template template2 = config.getTemplate("serviceimpl.ftl");
+				Template template = null;
+				Template template2 = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
+					template = config.getTemplate("service.ftl");
+					template2 = config.getTemplate("serviceimpl.ftl");
+				}else{
+					File templateFile1 = importTemplates.get("serviceInterface");
+					File templateFile2 = importTemplates.get("serviceImpl");
+					if(templateFile1!=null){
+						config.setDirectoryForTemplateLoading(templateFile1.getParentFile());
+						template = config.getTemplate(templateFile1.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
+						template = config.getTemplate("service.ftl");
+					}
+					if(templateFile2!=null){
+						config.setDirectoryForTemplateLoading(templateFile2.getParentFile());
+						template2 = config.getTemplate(templateFile2.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
+						template2 = config.getTemplate("serviceimpl.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//actionPackage  servicePackage htmlPath domainName
-				dataModel.put("actionPackage", actionPackageStr);
+				dataModel.put("controllerPackage", actionPackageStr);
 				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
 				for (Class clazz : selectedDomainClass) {
 					dataModel.put("domainClass", clazz.getName());
 					dataModel.put("domainClassName", clazz.getSimpleName());
-					dataModel.put("primaryKeyJavaName", StringUtil.changeFirstCharToUpper(getClassPrimaryKeyTypeName(clazz).get("name")));
+					dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(getClassPrimaryKeyTypeName(clazz).get("name")));
 					dataModel.put("primaryKeyJavaType", getClassPrimaryKeyTypeName(clazz).get("type"));
 					//D:\ProgramFiles\workspace\czbk\generatecode\target\classes
 //					String canonicalPath = new File(Thread.currentThread().getContextClassLoader().getResource("").getPath()).getCanonicalPath();
@@ -478,15 +543,28 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 
 			private void generateAction(boolean cover, List<Class> selectedDomainClass) throws IOException, TemplateException {
 				//生成action代码
-				Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+				Configuration config = new Configuration(Configuration.VERSION_2_3_22);
 //				String path = Thread.currentThread().getContextClassLoader().getResource("com/net023/template/no1").getPath();
 //				File dir = new File(path);
 //				config.setDirectoryForTemplateLoading(dir);
-				config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
-				Template template = config.getTemplate("action.ftl");
+				Template template = null;
+				if(useDefaultTemplate){
+					config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
+					template = config.getTemplate("action.ftl");
+				}else{
+					File templateFile = importTemplates.get("action");
+					if(templateFile!=null){
+						config.setDirectoryForTemplateLoading(templateFile.getParentFile());
+						template = config.getTemplate(templateFile.getName());
+					}else{
+						config.setClassForTemplateLoading(SpringmvcSpringMybatisEasyuiJpanel.class, "/com/caitaojun/template/no1");
+						template = config.getTemplate("action.ftl");
+					}
+				}
+				
 				Map<String, Object> dataModel = new HashMap<>();
 				//actionPackage  servicePackage htmlPath domainName
-				dataModel.put("actionPackage", actionPackageStr);
+				dataModel.put("controllerPackage", actionPackageStr);
 				dataModel.put("domainPackage", domainPackageStr);
 				dataModel.put("servicePackage", servicePackageStr);
 				dataModel.put("daoPackage", daoPackageStr);
@@ -629,6 +707,114 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 		JLabel frontEndLabel = new JLabel("前端技术：");
 		JComboBox frontEndcomboBox = new JComboBox();
 		frontEndcomboBox.setModel(new DefaultComboBoxModel(new String[] {"easyui"}));
+		
+		JLabel templateLabel = new JLabel("模板导入：");
+		JComboBox templatecomboBox = new JComboBox();
+		templatecomboBox.setModel(new DefaultComboBoxModel(new String[] {"默认模板","导入模板"}));
+		
+		templatecomboBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox box = (JComboBox) e.getSource();
+				if(box.getSelectedItem().equals("导入模板")){
+					useDefaultTemplate = false;
+					final JDialog chooserDialog = new JDialog(MybatisGenerate.currentJframe, "选择模板文件", true);
+					chooserDialog.setIconImage(new ImageIcon(CtjCodeGenerator.class.getResource("/com/caitaojun/res/ctj.png")).getImage());
+					chooserDialog.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
+					chooserDialog.setResizable(false);
+					chooserDialog.setSize(500, 150);
+					chooserDialog.setLocationRelativeTo(null);
+					JButton btnDao = new JButton("导入dao接口模板");
+					chooserDialog.add(btnDao);
+					JButton btnServiceInterface = new JButton("导入service接口模板");
+					chooserDialog.add(btnServiceInterface);
+					JButton btnServiceImpl = new JButton("导入service实现类模板");
+					chooserDialog.add(btnServiceImpl);
+					JButton btnController = new JButton("导入action模板");
+					chooserDialog.add(btnController);
+					JButton btnHtml = new JButton("导入html模板");
+					chooserDialog.add(btnHtml);
+					
+					final JFileChooser chooserDao = new JFileChooser();
+					chooserDao.setDialogTitle("打开dao模板文件");
+					final JFileChooser chooserServiceInterface = new JFileChooser();
+					chooserServiceInterface.setDialogTitle("打开service接口模板文件");
+					final JFileChooser chooserServiceImpl = new JFileChooser();
+					chooserServiceImpl.setDialogTitle("打开service模板文件");
+					final JFileChooser chooserController = new JFileChooser();
+					chooserController.setDialogTitle("打开action模板文件");
+					final JFileChooser chooserHtml = new JFileChooser();
+					chooserHtml.setDialogTitle("打开Html模板文件");
+					
+					btnDao.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserDao.showOpenDialog(chooserDialog);
+						}
+					});
+					btnServiceInterface.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserServiceInterface.showOpenDialog(chooserDialog);
+						}
+					});
+					btnServiceImpl.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserServiceImpl.showOpenDialog(chooserDialog);
+						}
+					});
+					btnController.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserController.showOpenDialog(chooserDialog);
+						}
+					});
+					btnHtml.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							chooserHtml.showOpenDialog(chooserDialog);
+						}
+					});
+					
+					chooserDialog.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent e) {
+							importTemplates.put("dao", chooserDao.getSelectedFile());
+							importTemplates.put("serviceInterface", chooserServiceInterface.getSelectedFile());
+							importTemplates.put("serviceImpl", chooserServiceImpl.getSelectedFile());
+							importTemplates.put("action", chooserController.getSelectedFile());
+							importTemplates.put("html", chooserHtml.getSelectedFile());
+							super.windowClosing(e);
+						}
+						
+					});
+					
+					chooserDialog.setVisible(true);
+				}else{
+					useDefaultTemplate = false;
+				}
+			}
+		});
+//		templatecomboBox.addItemListener(new ItemListener() {
+//			@Override
+//			public void itemStateChanged(ItemEvent e) {
+//				if(e.getStateChange() == ItemEvent.SELECTED){
+//					System.out.println(e.getItem());
+//					if(e.getItem().equals("导入模板")){
+//						JDialog chooserDialog = new JDialog(MybatisGenerate.currentJframe, "选择模板文件", true);
+//						chooserDialog.setResizable(false);
+//						chooserDialog.setSize(500, 500);
+//						chooserDialog.setLocationRelativeTo(null);
+//						JButton btnGet = new JButton("导入模板");
+//						chooserDialog.add(btnGet);
+//						chooserDialog.setVisible(true);
+//					}
+//				}
+//			}
+//		});
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
@@ -663,8 +849,14 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING,false)
 										.addGroup(gl_panel.createSequentialGroup()
 												.addComponent(frontEndLabel)
+												.addGap(6)
+												.addComponent(frontEndcomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addGap(18)
-												.addComponent(frontEndcomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))	
+												.addComponent(templateLabel)
+												.addGap(6)
+												.addComponent(templatecomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												)	
+												
 								)
 						))
 					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -692,7 +884,10 @@ public class StrutsSpringJpaEasyuiJpanel extends JPanel {
 						.addComponent(lblDao)
 						.addComponent(txtComnetdao, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(frontEndcomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(frontEndLabel))
+						.addComponent(frontEndLabel)
+						.addComponent(templatecomboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(templateLabel)
+						)
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap(97, Short.MAX_VALUE)

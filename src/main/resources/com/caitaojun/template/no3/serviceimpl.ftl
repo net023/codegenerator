@@ -43,7 +43,7 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 	@Override
 	public void batchDelete(String[] ids){
 		for(String id : ids){
-			${domainClassName?uncap_first}Dao.deleteByPrimaryKey(${primaryKeyType}.valueOf(id));
+			${domainClassName?uncap_first}Dao.deleteByPrimaryKey(${primaryKeyJavaType}.valueOf(id));
 		}
 	}
 

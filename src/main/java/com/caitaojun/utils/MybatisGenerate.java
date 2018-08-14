@@ -95,6 +95,7 @@ public class MybatisGenerate {
 		jdbcConnectionConfiguration.setConnectionURL(urlStr);
 		jdbcConnectionConfiguration.setUserId(userNameStr);
 		jdbcConnectionConfiguration.setPassword(passwordStr);
+//		jdbcConnectionConfiguration.addProperty("remarksReporting", "true");
 		//添加jdbc连接配置
 		context.setJdbcConnectionConfiguration(jdbcConnectionConfiguration);
 		//添加表信息  tableInfo {generateClassName、allFields{columnName、fieldName}、relationTableInfo}
