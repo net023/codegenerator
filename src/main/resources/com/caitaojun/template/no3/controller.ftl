@@ -25,7 +25,7 @@ public class ${domainClassName}Controller {
 	@RequestMapping({"/save","/update"})
 	@ResponseBody
 	public Object save(${domainClassName} ${domainClassName?uncap_first}) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.save(${domainClassName?uncap_first});
 			result.put("message", "保存成功!");
@@ -42,7 +42,7 @@ public class ${domainClassName}Controller {
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Object delete(${domainClassName} ${domainClassName?uncap_first}) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.delete(${domainClassName?uncap_first});
 			result.put("message", "删除成功!");
@@ -59,7 +59,7 @@ public class ${domainClassName}Controller {
 	@RequestMapping("/batchDelete")
 	@ResponseBody
 	public Object batchDelete(String ids) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.batchDelete(ids.split(","));
 			result.put("message", "删除成功!");
@@ -76,7 +76,7 @@ public class ${domainClassName}Controller {
 	@RequestMapping("/findOne")
 	@ResponseBody
 	public Object findOne(${domainClassName} ${domainClassName?uncap_first}) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName} data = ${domainClassName?uncap_first}Service.findOne(${domainClassName?uncap_first});
 			result.put("message", "获取成功!");
@@ -94,7 +94,7 @@ public class ${domainClassName}Controller {
 	@RequestMapping("/findAll")
 	@ResponseBody
 	public Object findAll(String sort,String order) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findPageData(null,null,null,sort,order);
 			result.put("message", "获取成功!");
@@ -112,10 +112,10 @@ public class ${domainClassName}Controller {
 	@RequestMapping("/pageQuery")
 	@ResponseBody
 	public Object pageQuery(${domainClassName} ${domainClassName?uncap_first},int page,int rows,String sort,String order) {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			List<${domainClassName}> pageData = ${domainClassName?uncap_first}Service.findPageData(${domainClassName?uncap_first}, page, rows, sort, order);
-			Map<String, Object> data = new HashMap<>();
+			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("total", ${domainClassName?uncap_first}Service.selectCount(${domainClassName?uncap_first}));
 			data.put("rows", pageData);
 			result.put("message", "获取成功!");

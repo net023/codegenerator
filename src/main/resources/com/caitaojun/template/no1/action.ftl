@@ -77,7 +77,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 		@Action(value = "update", results = {@Result(name = "success", type = "json")})
 	})
 	public String save() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.save(${domainClassName?uncap_first});
 			result.put("message", "保存成功!");
@@ -94,7 +94,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	//删
 	@Action(value = "delete", results = {@Result(name = "success", type = "json")})
 	public String delete() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.delete(${domainClassName?uncap_first});
 			result.put("message", "删除成功!");
@@ -111,7 +111,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	//批量删除
 	@Action(value = "batchDelete", results = {@Result(name = "success", type = "json")})
 	public String batchDelete() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName?uncap_first}Service.batchDelete(ids.split(","));
 			result.put("message", "删除成功!");
@@ -128,7 +128,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	//查
 	@Action(value = "findOne", results = {@Result(name = "success", type = "json")})
 	public String findOne() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			${domainClassName} data = ${domainClassName?uncap_first}Service.findOne(${domainClassName?uncap_first});
 			result.put("message", "获取成功!");
@@ -146,7 +146,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	//查全部
 	@Action(value = "findAll", results = {@Result(name = "success", type = "json")})
 	public String findAll() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			List<${domainClassName}> ${domainClassName?uncap_first}s = ${domainClassName?uncap_first}Service.findAll();
 			result.put("message", "获取成功!");
@@ -164,7 +164,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 	//分页查
 	@Action(value = "pageQuery", results = {@Result(name = "success", type = "json")})
 	public String pageQuery() {
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			Pageable pageable = null;
 			if(sort!=null){
@@ -202,7 +202,7 @@ public class ${domainClassName}Action extends ActionSupport implements ModelDriv
 				};
 				pageData = ${domainClassName?uncap_first}Service.pageQuery(spec,pageable);
 			}
-			Map<String, Object> data = new HashMap<>();
+			Map<String, Object> data = new HashMap<String, Object>();
 			data.put("total", pageData.getTotalElements());
 			data.put("rows", pageData.getContent());
 			result.put("message", "获取成功!");

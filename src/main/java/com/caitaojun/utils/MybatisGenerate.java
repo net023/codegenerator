@@ -141,23 +141,28 @@ public class MybatisGenerate {
 			}
 			context.addTableConfiguration(tc);
 		}
+		//获取当前工程的磁盘路径
+		String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+		projectPath = projectPath.split("target")[0];
+		projectPath = projectPath.replace("\\", "/");
+//		System.out.println(projectPath);
 		//添加生成doamin配置
 		if(generateDomain){
 			JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
 			javaModelGeneratorConfiguration.setTargetPackage(domainPackageStr);
-			javaModelGeneratorConfiguration.setTargetProject("src/main/java");
+			javaModelGeneratorConfiguration.setTargetProject(projectPath+"/src/main/java");
 			context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 		}
 		//添加生成mapper配置
 		if(generateMapper){
 			SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
 			sqlMapGeneratorConfiguration.setTargetPackage(mapperPathStr);
-			sqlMapGeneratorConfiguration.setTargetProject("src/main/resources");
+			sqlMapGeneratorConfiguration.setTargetProject(projectPath+"/src/main/resources");
 			context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 			
 			//生成dao
 			JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
-			javaClientGeneratorConfiguration.setTargetProject("src/main/java");
+			javaClientGeneratorConfiguration.setTargetProject(projectPath+"/src/main/java");
 			javaClientGeneratorConfiguration.setTargetPackage(daoPackageStr);
 			javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
 			context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
