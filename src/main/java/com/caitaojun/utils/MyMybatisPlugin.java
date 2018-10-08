@@ -33,7 +33,9 @@ public class MyMybatisPlugin extends PluginAdapter {
 	
 	@Override
 	public void initialized(IntrospectedTable introspectedTable) {
-		ThreadLocalCurrentIntrospectedTable.setCurrentIntrospectedTable(introspectedTable);
+//		System.out.println("init.....:"+introspectedTable.getFullyQualifiedTable().getDomainObjectName());
+//		ThreadLocalCurrentIntrospectedTable.setCurrentIntrospectedTable(introspectedTable);
+		ThreadLocalCurrentIntrospectedTable.setCurrentIntrospectedTable(introspectedTable.getFullyQualifiedTable().getDomainObjectName(), introspectedTable);
 		javaPropertyHandler(introspectedTable);
 		super.initialized(introspectedTable);
 	}
@@ -249,22 +251,24 @@ public class MyMybatisPlugin extends PluginAdapter {
 		 */
 //		System.out.println("ctj...");
 		//给插入添加返回主键值
-		List<Element> elements = document.getRootElement().getElements();
-		for (Element element : elements) {
-			tag:
-			if(element instanceof XmlElement){
-				List<Attribute> attributes = ((XmlElement)element).getAttributes();
-				for (Attribute attribute : attributes) {
-					if("insert".equals(attribute.getValue())){
-						((XmlElement) element).addAttribute(new Attribute("useGeneratedKeys", "true"));
-						((XmlElement) element).addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
-						break tag;
-					}else if("insertSelective".equals(attribute.getValue())){
-						((XmlElement) element).addAttribute(new Attribute("useGeneratedKeys", "true"));
-						((XmlElement) element).addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
-						break tag;
+		if(introspectedTable.hasPrimaryKeyColumns() && "Integer".equals(introspectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName())){
+			List<Element> elements = document.getRootElement().getElements();
+			for (Element element : elements) {
+				tag:
+					if(element instanceof XmlElement){
+						List<Attribute> attributes = ((XmlElement)element).getAttributes();
+						for (Attribute attribute : attributes) {
+							if("insert".equals(attribute.getValue())){
+								((XmlElement) element).addAttribute(new Attribute("useGeneratedKeys", "true"));
+								((XmlElement) element).addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
+								break tag;
+							}else if("insertSelective".equals(attribute.getValue())){
+								((XmlElement) element).addAttribute(new Attribute("useGeneratedKeys", "true"));
+								((XmlElement) element).addAttribute(new Attribute("keyProperty", introspectedTable.getPrimaryKeyColumns().get(0).getJavaProperty()));
+								break tag;
+							}
+						}
 					}
-				}
 			}
 		}
 		
@@ -688,6 +692,8 @@ public class MyMybatisPlugin extends PluginAdapter {
 
 	@Override
 	public boolean sqlMapGenerated(GeneratedXmlFile sqlMap, IntrospectedTable introspectedTable) {
+//		System.out.println(introspectedTable.hasPrimaryKeyColumns());
+//		System.out.println(introspectedTable.getFullyQualifiedTable().getDomainObjectName());
 		try {
 			Field declaredField = sqlMap.getClass().getDeclaredField("isMergeable");//true代表对mapper的xml文件追加，false代表对mapper的xml文件覆盖
 			declaredField.setAccessible(true);

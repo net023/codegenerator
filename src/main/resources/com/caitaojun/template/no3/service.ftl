@@ -11,7 +11,9 @@ public interface ${domainClassName}Service {
 	
 	public void delete(${domainClassName} ${domainClassName?uncap_first});
 	
+	<#if primaryKeyName??>
 	public void batchDelete(String[] ids);
+	</#if>
 	
 	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first});
 	

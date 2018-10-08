@@ -55,6 +55,7 @@ public class ${domainClassName}Controller {
 		return result;
 	}
 	
+	<#if primaryKeyName??>
 	//批量删除
 	@RequestMapping("/batchDelete")
 	@ResponseBody
@@ -71,6 +72,7 @@ public class ${domainClassName}Controller {
 		}
 		return result;
 	}
+	</#if>
 	
 	//查
 	@RequestMapping("/findOne")

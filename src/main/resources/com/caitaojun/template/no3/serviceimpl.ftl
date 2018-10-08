@@ -19,11 +19,15 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 
 	@Override
 	public ${domainClassName} save(${domainClassName} ${domainClassName?uncap_first}) {
+		<#if primaryKeyName??>
 		if(${domainClassName?uncap_first}.get${primaryKeyName}()==null){
 			${domainClassName?uncap_first}Dao.insertSelective(${domainClassName?uncap_first});
 		}else{
 			${domainClassName?uncap_first}Dao.updateByPrimaryKeySelective(${domainClassName?uncap_first});
 		}
+		<#else>
+		${domainClassName?uncap_first}Dao.insertSelective(${domainClassName?uncap_first});
+		</#if>
 		return ${domainClassName?uncap_first};
 	}
 
@@ -37,19 +41,25 @@ public class ${domainClassName}ServiceImpl implements ${domainClassName}Service 
 
 	@Override
 	public void delete(${domainClassName} ${domainClassName?uncap_first}) {
+	    <#if primaryKeyName??>
 		${domainClassName?uncap_first}Dao.deleteByPrimaryKey(${domainClassName?uncap_first}.get${primaryKeyName}());
+		</#if>
 	}
 	
+	<#if primaryKeyName??>
 	@Override
 	public void batchDelete(String[] ids){
 		for(String id : ids){
 			${domainClassName?uncap_first}Dao.deleteByPrimaryKey(${primaryKeyJavaType}.valueOf(id));
 		}
 	}
+	</#if>
 
 	@Override
 	public ${domainClassName} findOne(${domainClassName} ${domainClassName?uncap_first}) {
+		<#if primaryKeyName??>
 		return ${domainClassName?uncap_first}Dao.selectByPrimaryKey(${domainClassName?uncap_first}.get${primaryKeyName}());
+		</#if>
 	}
 	
 	@Override

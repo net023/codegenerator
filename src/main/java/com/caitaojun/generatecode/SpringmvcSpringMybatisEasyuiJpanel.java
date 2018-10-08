@@ -1453,6 +1453,7 @@ templatecomboBox.addActionListener(new ActionListener() {
 					MybatisGenerate.generateInfo = generateInfo;
 					//对ThreadLocalAllDomainJavaProperties清空
 					ThreadLocalAllDomainJavaProperties.removeAllDomainJavaProperties();
+					ThreadLocalCurrentIntrospectedTable.removeCurrentIntrospectedTable();
 					//把相关信息传给mybatis generator进行生成
 					MybatisGenerate.generate(data_new, iscover, isexample, generateDomain, generateMapper, generateService, generateController, generateHtml, domainPackageStr, mapperPathStr, daoPackageStr, servicePackageStr, controllerPackageStr, htmlPathStr, driverStr, urlStr, userNameStr, passwordStr);
 					//生成代码
@@ -1632,12 +1633,16 @@ templatecomboBox.addActionListener(new ActionListener() {
 						generateClassName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(tableName));
 					}
 					dataModel.put("domainClassName", generateClassName);
-					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable();
-					String primaryKeyType = currentIntrospectedTable.getPrimaryKeyType();
-					String javaProperty = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getJavaProperty();
-					String shortName = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName();
-					dataModel.put("primaryKeyJavaType", shortName);
-					dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(javaProperty));
+//					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable();
+					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable().get(generateClassName);
+//					System.out.println("service:"+generateClassName+":----:"+currentIntrospectedTable.getFullyQualifiedTable().getDomainObjectName());
+//					String primaryKeyType = currentIntrospectedTable.getPrimaryKeyType();
+					if(currentIntrospectedTable.hasPrimaryKeyColumns()){
+						String javaProperty = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getJavaProperty();
+						String shortName = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName();
+						dataModel.put("primaryKeyJavaType", shortName);
+						dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(javaProperty));
+					}
 					
 //					String projectPath = System.getProperty("user.dir");
 					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
@@ -1723,6 +1728,13 @@ templatecomboBox.addActionListener(new ActionListener() {
 						generateClassName = StringUtil.changeFirstCharToUpper(StringUtil.changeColumnNameToHumpName(tableName));
 					}
 					dataModel.put("domainClassName", generateClassName);
+					IntrospectedTable currentIntrospectedTable = ThreadLocalCurrentIntrospectedTable.getCurrentIntrospectedTable().get(generateClassName);
+					if(currentIntrospectedTable.hasPrimaryKeyColumns()){
+						String javaProperty = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getJavaProperty();
+						String shortName = currentIntrospectedTable.getPrimaryKeyColumns().get(0).getFullyQualifiedJavaType().getShortName();
+						dataModel.put("primaryKeyJavaType", shortName);
+						dataModel.put("primaryKeyName", StringUtil.changeFirstCharToUpper(javaProperty));
+					}
 //					String projectPath = System.getProperty("user.dir");
 					String projectPath = StrutsSpringJpaEasyuiJpanel.class.getResource("/").getPath();
 					projectPath = projectPath.split("target")[0];
